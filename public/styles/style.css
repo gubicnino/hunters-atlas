@@ -158,27 +158,29 @@ main {
   box-shadow: 0 4px 15px rgba(44, 85, 48, 0.3);
 }
 
-/* Animals Grid */
+/* Updated Minimalistic Animal Card Styles */
 .animals-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
 }
 
 .animal-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.04);
 }
 
 .animal-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
+/* Keep existing header styles - they're perfect */
 .animal-header {
   background: linear-gradient(135deg, #2c5530, #4a7c59);
   color: white;
@@ -186,8 +188,9 @@ main {
 }
 
 .animal-header h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    margin: 0;
+    font-weight: 600;
 }
 
 .animal-class {
@@ -196,176 +199,280 @@ main {
 }
 
 .animal-content {
-  padding: 1.5rem;
+    padding: 1.5rem;
 }
 
-.animal-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+/* Compact Stats Row */
+.stats-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-.stat-item {
-  text-align: center;
-  padding: 0.75rem;
-  background: #f8f9fa;
-  border-radius: 5px;
+.stat-compact {
+    flex: 1;
+    text-align: center;
+    padding: 0.6rem;
+    background: #f8f9fa;
+    border-radius: 8px;
 }
 
-.stat-label {
-  font-size: 0.85rem;
-  color: #666;
-  display: block;
+.stat-compact .stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
 }
 
-.stat-value {
-  font-weight: bold;
-  color: #2c5530;
-  font-size: 1.1rem;
+.stat-compact .stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c5530;
 }
 
-.trophy-ratings {
-  margin-bottom: 1.5rem;
+/* Compact Trophy Section */
+.trophy-section {
+    margin-bottom: 1.5rem;
 }
 
-.trophy-ratings h4 {
-  color: #2c5530;
-  margin-bottom: 0.5rem;
+.trophy-section h4 {
+    color: #2c5530;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-.trophy-list {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+.trophy-row {
+    display: flex;
+    gap: 0.5rem;
 }
 
-.trophy-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: 500;
+.trophy-compact {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem 0.3rem;
+    border-radius: 6px;
+    transition: transform 0.2s ease;
 }
 
-.trophy-bronze { background: #cd7f32; color: white; }
-.trophy-silver { background: #c0c0c0; color: #333; }
-.trophy-gold { background: #ffd700; color: #333; }
-.trophy-diamond { background: #b9f2ff; color: #333; }
 
-.need-zones, .reserves-list {
-  margin-bottom: 1.5rem;
+.trophy-compact.bronze {
+    background: #cd7f32;
+    color: white;
 }
 
-.need-zones h4, .reserves-list h4 {
-  color: #2c5530;
-  margin-bottom: 0.5rem;
+.trophy-compact.silver {
+    background: #c0c0c0;
+    color: #333;
 }
 
-.zones-list, .reserves-tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+.trophy-compact.gold {
+    background: #ffd700;
+    color: #333;
 }
 
-.zone-tag, .reserve-tag {
-  background: #e9ecef;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  color: #495057;
+.trophy-compact.diamond {
+    background: #b9f2ff;
+    color: #004d5a;
 }
 
-.fur-types {
-  margin-bottom: 1rem;
+.trophy-compact .trophy-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
 }
 
-.fur-types h4 {
-  color: #2c5530;
-  margin-bottom: 0.5rem;
+.trophy-compact .trophy-score {
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
-.fur-list {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+/* Simple Need Zones Table */
+.need-zones-section {
+    margin-bottom: 1.5rem;
 }
 
-.fur-tag {
-  background: linear-gradient(135deg, #6f4e37, #8b6f47);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.85rem;
+.need-zones-section h4 {
+    color: #2c5530;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-/* Reserves Grid */
-.reserves-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
+.zones-table {
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.reserve-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.zone-row {
+    display: flex;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #e9ecef;
 }
 
-.reserve-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+.zone-row:last-child {
+    border-bottom: none;
 }
 
-.reserve-header {
-  background: linear-gradient(135deg, #2c5530, #4a7c59);
-  color: white;
-  padding: 1.5rem;
+.zone-type {
+    flex: 0 0 60px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    color: white;
+    margin-right: 1rem;
 }
 
-.reserve-header h3 {
-  font-size: 1.5rem;
+.zone-type.feed {
+    background: #28a745;
 }
 
-.map-placeholder {
-  height: 200px;
-  background: linear-gradient(135deg, #e9ecef, #dee2e6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6c757d;
-  font-style: italic;
+.zone-type.drink {
+    background: #007bff;
 }
 
-.reserve-content {
-  padding: 1.5rem;
+.zone-type.rest {
+    background: #fd7e14;
 }
 
-.animals-list h4 {
-  color: #2c5530;
-  margin-bottom: 1rem;
+.zone-time {
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 500;
 }
 
-.animals-tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+/* Compact Fur Types */
+.fur-section {
+    margin-bottom: 1.5rem;
 }
 
-.animal-tag {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  color: #495057;
-  transition: background-color 0.3s ease;
+.fur-section h4 {
+    color: #2c5530;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-.animal-tag:hover {
-  background: #e9ecef;
+.fur-compact {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.fur-compact .fur-item {
+    background: #f8f9fa;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    color: #495057;
+    border: 1px solid #e9ecef;
+    font-weight: 500;
+}
+
+/* Rarity Styles for Fur Types */
+.fur-compact .fur-item.common {
+    background: #f8f9fa;
+    color: #6c757d;
+    border-color: #dee2e6;
+}
+
+.fur-compact .fur-item.uncommon {
+    background: #f0fff4;
+    color: #28a745;
+    border-color: #c3e6cb;
+}
+
+.fur-compact .fur-item.rare {
+    background: #e7f3ff;
+    color: #007bff;
+    border-color: #bee5eb;
+}
+
+.fur-compact .fur-item.very-rare {
+    background: #f3e5f5;
+    color: #6f42c1;
+    border-color: #d1b7d8;
+}
+
+.fur-compact .fur-item.fabled {
+    background: linear-gradient(135deg, #fff5e6, #ffe4b3);
+    color: #e67e22;
+    border: 2px solid #f39c12;
+    position: relative;
+    overflow: hidden;
+}
+
+.fur-compact .fur-item.fabled::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    animation: shimmer 2s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.fur-compact .fur-item.mission {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border: 2px solid #28a745;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Add hover effects for special rarities */
+.fur-compact .fur-item.fabled:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+}
+
+.fur-compact .fur-item.mission:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Compact Reserves */
+.reserves-section h4 {
+    color: #2c5530;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.reserves-compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.reserve-tag {
+    background: #e9ecef;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.reserve-tag:hover {
+    background: #2c5530;
+    color: white;
 }
 
 /* Footer */
@@ -415,4 +522,28 @@ footer {
   .animals-tags {
     justify-content: center;
   }
+  
+  .animals-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .animal-content {
+        padding: 1.2rem;
+    }
+    
+    .stats-row {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .trophy-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .fur-compact,
+    .reserves-compact {
+        justify-content: center;
+    }
 }
