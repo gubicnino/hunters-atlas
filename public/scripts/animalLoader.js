@@ -56,19 +56,9 @@ function displayAnimals(animals) {
                 <!-- Simple Need Zones Table -->
                 <div class="need-zones-section">
                     <h4>Need Zones</h4>
-                    <div class="zones-table">
-                        <div class="zone-row">
-                            <span class="zone-type feed">Feed</span>
-                            <span class="zone-time">09:00-12:00, 16:00-19:00</span>
-                        </div>
-                        <div class="zone-row">
-                            <span class="zone-type drink">Drink</span>
-                            <span class="zone-time">05:00-08:00, 20:00-21:00</span>
-                        </div>
-                        <div class="zone-row">
-                            <span class="zone-type rest">Rest</span>
-                            <span class="zone-time">22:00-04:00</span>
-                        </div>
+                    <div class="need-zones-table">
+                        <ul class="nav nav-tabs"  role="tablist">${createTabMenu(animal.reserves_with_need_zones, animal.name)}</ul>
+                        <div class="zones-table tab-content">${createNeedZoneTab(animal.reserves_with_need_zones, animal.name)}</div>
                     </div>
                 </div>
 
@@ -96,7 +86,7 @@ function displayAnimals(animals) {
 function createFurVariants(furVariants) {
 
     if (!furVariants || furVariants.length === 0) {
-        return '<span class="fur-   item common">No fur variants available</span>';
+        return '<span class="fur-item common">No fur variants available</span>';
     }
 
     // Return HTML string instead of DOM element
@@ -105,4 +95,54 @@ function createFurVariants(furVariants) {
             ? `<span class="fur-item very-rare">${variant.variant}</span>`
             : `<span class="fur-item ${variant.rarity.toLowerCase()}">${variant.variant}</span>`
     ).join('');
+}
+
+
+function createNeedZoneTab(reserves, animalName) {
+    if (!reserves || reserves.length === 0) {   
+        return '<p>No need zones available</p>';
+    }
+    const safeAnimalName = animalName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+
+    return reserves.map((reserve, index) => {
+        const safeReserveName = reserve.reserve_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+        return`
+        <div class="tab-pane fade ${index == 0 ? 'show active' : ''}" id="${safeAnimalName}-${safeReserveName}-tab-pane" role="tabpanel">
+            <div class="zone-row">
+                <span class="zone-type feed">Feed</span>
+                <span class="zone-time">${reserve.need_zones.feed || 'N/A'}</span>
+            </div>
+            <div class="zone-row">
+                <span class="zone-type drink">Drink</span>
+                <span class="zone-time">${reserve.need_zones.drink || 'N/A'}</span>
+            </div>
+            <div class="zone-row">
+                <span class="zone-type rest">Rest</span>
+                <span class="zone-time">${reserve.need_zones.rest || 'N/A'}</span>
+            </div>
+        </div>
+    `}).join('');
+}
+function createTabMenu(reserves, animalName) {
+    if (!reserves || reserves.length === 0) {
+        return '<li class="nav-item"><span class="nav-link active">No reserves available</span></li>';
+    }
+    const safeAnimalName = animalName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+
+    return reserves.map((reserve, index) => {
+        const safeReserveName = reserve.reserve_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+        
+        return`
+        <li class="nav-item">
+            <a class="nav-link ${index === 0 ? 'active' : ''}" 
+               id="${safeAnimalName}-${safeReserveName}-tab" 
+               data-bs-toggle="tab" 
+               data-bs-target="#${safeAnimalName}-${safeReserveName}-tab-pane" 
+               role="tab" 
+               aria-controls="${safeReserveName}-tab-pane"
+               aria-selected="${index === 0 ? 'true' : 'false'}">
+                ${reserve.reserve_name}
+            </a>
+        </li>
+    `}).join('');
 }

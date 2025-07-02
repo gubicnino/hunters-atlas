@@ -291,62 +291,181 @@ main {
     font-weight: 700;
 }
 
-/* Simple Need Zones Table */
-.need-zones-section {
+/* Tab Navigation Styling */
+.need-zones-section{
     margin-bottom: 1.5rem;
 }
-
 .need-zones-section h4 {
     color: #2c5530;
     margin-bottom: 0.8rem;
     font-size: 1rem;
     font-weight: 600;
 }
+.need-zones-table .nav-tabs {
+    border: none;
+    margin-bottom: 0;
+    background: transparent;
+}
 
-.zones-table {
+.need-zones-table .nav-tabs .nav-item {
+    margin-bottom: 0;
+}
+
+.need-zones-table .nav-tabs .nav-link {
     background: #f8f9fa;
-    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px 8px 0 0;
+    color: #495057;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.5rem 0.8rem;
+    margin-right: 0.25rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.need-zones-table .nav-tabs .nav-link:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    color: #2c5530;
+    transform: translateY(-2px);
+}
+
+.need-zones-table .nav-tabs .nav-link.active {
+    background: #2c5530;
+    border-color: #2c5530;
+    color: white;
+    box-shadow: 0 2px 8px rgba(44, 85, 48, 0.3);
+}
+
+.need-zones-table .nav-tabs .nav-link.active:hover {
+    background: #4a7c59;
+    border-color: #4a7c59;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Tab Content Styling */
+.need-zones-table .tab-content {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 8px 8px 8px;
     overflow: hidden;
 }
 
-.zone-row {
-    display: flex;
-    align-items: center;
-    padding: 0.7rem 1rem;
-    border-bottom: 1px solid #e9ecef;
+.need-zones-table .tab-pane {
+    padding: 0;
 }
 
-.zone-row:last-child {
+.need-zones-table .tab-pane h4,
+.need-zones-table .tab-pane h5 {
+    background: linear-gradient(135deg, #2c5530, #4a7c59);
+    color: white;
+    margin: 0;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+/* Zone rows within tabs */
+.need-zones-table .zone-row {
+    background: white;
+    margin: 0;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+}
+
+.need-zones-table .zone-row:last-child {
     border-bottom: none;
 }
 
-.zone-type {
-    flex: 0 0 60px;
-    font-size: 0.8rem;
-    font-weight: 600;
+.need-zones-table .zone-row:nth-child(even) {
+    background: #fafbfc;
+}
+
+.need-zones-table .zone-type {
+    flex: 0 0 70px;
+    font-size: 0.75rem;
+    font-weight: 700;
     text-align: center;
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
     color: white;
     margin-right: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.zone-type.feed {
-    background: #28a745;
+.need-zones-table .zone-type.feed {
+    background: linear-gradient(135deg, #28a745, #20c997);
 }
 
-.zone-type.drink {
-    background: #007bff;
+.need-zones-table .zone-type.drink {
+    background: linear-gradient(135deg, #007bff, #17a2b8);
 }
 
-.zone-type.rest {
-    background: #fd7e14;
+.need-zones-table .zone-type.rest {
+    background: linear-gradient(135deg, #fd7e14, #ffc107);
 }
 
-.zone-time {
+.need-zones-table .zone-time {
     font-size: 0.85rem;
     color: #495057;
     font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Responsive adjustments for tabs */
+@media (max-width: 768px) {
+    .need-zones-table .nav-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .need-zones-table .nav-tabs .nav-link {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+        margin-right: 0.2rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .need-zones-table .zone-type {
+        flex: 0 0 60px;
+        font-size: 0.7rem;
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .need-zones-table .zone-time {
+        font-size: 0.8rem;
+    }
+    
+    .need-zones-table .tab-pane h4,
+    .need-zones-table .tab-pane h5 {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .need-zones-table .zone-row {
+        padding: 0.6rem 0.8rem;
+    }
+}
+
+/* Smooth animations */
+.need-zones-table .tab-pane.fade {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.need-zones-table .tab-pane.fade:not(.show) {
+    opacity: 0;
+}
+
+.need-zones-table .tab-pane.fade.show {
+    opacity: 1;
 }
 
 /* Compact Fur Types */
