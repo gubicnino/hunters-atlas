@@ -573,25 +573,113 @@ main {
     font-weight: 600;
 }
 
-.reserves-compact {
+/* Reserve Cards Styling - Updated to use Flexbox */
+.reserve-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.04);
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 0 !important;
+}
+.reserve-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    padding: 1.5rem;
+}
+.reserve-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Reserve Header */
+.reserve-header {
+    background: linear-gradient(135deg, #2c5530, #4a7c59);
+    color: white;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    flex-shrink: 0;
     gap: 0.5rem;
 }
 
-.reserve-tag {
-    background: #e9ecef;
-    padding: 0.4rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #495057;
-    transition: all 0.2s ease;
+.reserve-header h3 {
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 600;
 }
 
-.reserve-tag:hover {
-    background: #2c5530;
-    color: white;
+.reserve-location {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.animals-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.animal-class {
+    font-weight: 600;
+    color: #4a7c59;
+}
+
+.animals-list li:hover .animal-class {
+    color: rgba(255,255,255,0.8);
+}
+
+/* Right section - Map */
+.reserve-map {
+    flex: 1.5;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 1.2rem;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.reserve-map::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 45%, rgba(44, 85, 48, 0.05) 50%, transparent 55%);
+    animation: mapShine 3s ease-in-out infinite;
+}
+
+@keyframes mapShine {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+}
+
+.map-placeholder {
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.map-placeholder::before {
+    content: '🗺️';
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.6;
 }
 
 /* Footer */

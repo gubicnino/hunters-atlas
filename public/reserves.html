@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserves - Hunter's Atlas</title>
     <link rel="stylesheet" href="/styles/style.css">
+    <script src="./scripts/reserveLoader.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
     <header>
@@ -27,231 +30,14 @@
             <h1>Hunting Reserves</h1>
             <p>Explore all hunting destinations in The Hunter: Call of the Wild</p>
         </section>
+        <section class="reserves-section row g-3">
 
-        <section class="reserves-grid">
-            <!-- Layton Lake District -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Layton Lake District</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - Pacific Northwest Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Whitetail Deer</span>
-                            <span class="animal-tag">Roosevelt Elk</span>
-                            <span class="animal-tag">Black Bear</span>
-                            <span class="animal-tag">Mallard Duck</span>
-                            <span class="animal-tag">Canada Goose</span>
-                            <span class="animal-tag">Mountain Lion</span>
-                            <span class="animal-tag">Coyote</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hirschfelden Hunting Reserve -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Hirschfelden Hunting Reserve</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - German Countryside Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Red Deer</span>
-                            <span class="animal-tag">Roe Deer</span>
-                            <span class="animal-tag">Wild Boar</span>
-                            <span class="animal-tag">European Rabbit</span>
-                            <span class="animal-tag">Red Fox</span>
-                            <span class="animal-tag">Fallow Deer</span>
-                            <span class="animal-tag">European Brown Bear</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Medved-Taiga National Park -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Medved-Taiga National Park</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - Siberian Wilderness Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Brown Bear</span>
-                            <span class="animal-tag">Lynx</span>
-                            <span class="animal-tag">Wolf</span>
-                            <span class="animal-tag">Wild Boar</span>
-                            <span class="animal-tag">Roe Deer</span>
-                            <span class="animal-tag">Black Bear</span>
-                            <span class="animal-tag">Reindeer</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vurhonga Savanna -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Vurhonga Savanna</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - African Savanna Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Lion</span>
-                            <span class="animal-tag">Cape Buffalo</span>
-                            <span class="animal-tag">Blue Wildebeest</span>
-                            <span class="animal-tag">Gemsbok</span>
-                            <span class="animal-tag">Springbok</span>
-                            <span class="animal-tag">Lesser Kudu</span>
-                            <span class="animal-tag">Warthog</span>
-                            <span class="animal-tag">Side-Striped Jackal</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Parque Fernando -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Parque Fernando</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - South American Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Water Buffalo</span>
-                            <span class="animal-tag">Puma</span>
-                            <span class="animal-tag">Red Deer</span>
-                            <span class="animal-tag">Blackbuck</span>
-                            <span class="animal-tag">Axis Deer</span>
-                            <span class="animal-tag">Feral Goat</span>
-                            <span class="animal-tag">Feral Pig</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Yukon Valley -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Yukon Valley</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - Canadian Wilderness Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Grizzly Bear</span>
-                            <span class="animal-tag">Moose</span>
-                            <span class="animal-tag">Caribou</span>
-                            <span class="animal-tag">Wolf</span>
-                            <span class="animal-tag">Mountain Goat</span>
-                            <span class="animal-tag">Dall Sheep</span>
-                            <span class="animal-tag">Black Bear</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cuatro Colinas Game Reserve -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Cuatro Colinas Game Reserve</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - Spanish Countryside Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Iberian Wolf</span>
-                            <span class="animal-tag">Red Deer</span>
-                            <span class="animal-tag">Roe Deer</span>
-                            <span class="animal-tag">Wild Boar</span>
-                            <span class="animal-tag">Iberian Mouflon</span>
-                            <span class="animal-tag">Ibex</span>
-                            <span class="animal-tag">Chamois</span>
-                            <span class="animal-tag">European Rabbit</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Silver Ridge Peaks -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Silver Ridge Peaks</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - Rocky Mountain Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Bighorn Sheep</span>
-                            <span class="animal-tag">Rocky Mountain Elk</span>
-                            <span class="animal-tag">Mule Deer</span>
-                            <span class="animal-tag">Mountain Lion</span>
-                            <span class="animal-tag">American Black Bear</span>
-                            <span class="animal-tag">Mountain Goat</span>
-                            <span class="animal-tag">Pronghorn Antelope</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Te Awaroa National Park -->
-            <div class="reserve-card">
-                <div class="reserve-header">
-                    <h3>Te Awaroa National Park</h3>
-                </div>
-                <div class="map-placeholder">
-                    [Map Image Placeholder - New Zealand Reserve]
-                </div>
-                <div class="reserve-content">
-                    <div class="animals-list">
-                        <h4>Animals Found Here</h4>
-                        <div class="animals-tags">
-                            <span class="animal-tag">Red Deer</span>
-                            <span class="animal-tag">Sika Deer</span>
-                            <span class="animal-tag">Fallow Deer</span>
-                            <span class="animal-tag">Chamois</span>
-                            <span class="animal-tag">Tahr</span>
-                            <span class="animal-tag">Wild Boar</span>
-                            <span class="animal-tag">Turkey</span>
-                            <span class="animal-tag">European Rabbit</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section>
     </main>
 
     <footer>
         <p>&copy; 2025 Hunter's Atlas. Fan-made companion for The Hunter: Call of the Wild.</p>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
