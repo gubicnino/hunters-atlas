@@ -1,10 +1,15 @@
+let allAnimals = []; // Store all animals globally
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // Load the animal data from the server
     fetch('/animals')
         .then(response => response.json())
         .then(data => {
             console.log('Animal data loaded:', data);
+            allAnimals = data;
             displayAnimals(data);
+            setupFilters();
         })
         .catch(error => {
             console.error('Error loading animal data:', error);
@@ -83,6 +88,43 @@ function displayAnimals(animals) {
         </div>
     `).join('');
 }
+
+function setupFilters() {
+    const searchInput = document.getElementById('search-input');
+    const classFilter = document.getElementById('class-filter');
+    const reserveFilter = document.getElementById('reserve-filter');
+    
+    // Search functionality
+    searchInput?.addEventListener('input', filterAnimals);
+    classFilter?.addEventListener('change', filterAnimals);
+    reserveFilter?.addEventListener('change', filterAnimals);
+}
+
+function filterAnimals() {
+    const searchTerm = document.getElementById('search-input')?.value.toLowerCase() || '';
+    const selectedClass = document.getElementById('class-filter')?.value || '';
+    const selectedReserve = document.getElementById('reserve-filter')?.value || '';
+    
+    const filteredAnimals = allAnimals.filter(animal => {
+        // Search by name
+        const matchesSearch = animal.name.toLowerCase().includes(searchTerm);
+        
+        // Filter by class
+        const matchesClass = !selectedClass || animal.class.toString() === selectedClass;
+        
+        // Filter by reserve
+        const matchesReserve = !selectedReserve || 
+            (animal.reserves_with_need_zones && 
+             animal.reserves_with_need_zones.some(reserve => 
+                 reserve.reserve_name === selectedReserve
+             ));
+        
+        return matchesSearch && matchesClass && matchesReserve;
+    });
+    
+    displayAnimals(filteredAnimals);
+}
+
 function createFurVariants(furVariants) {
 
     if (!furVariants || furVariants.length === 0) {
@@ -146,3 +188,5 @@ function createTabMenu(reserves, animalName) {
         </li>
     `}).join('');
 }
+
+
