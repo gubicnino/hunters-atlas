@@ -143,13 +143,6 @@ body {
   /* Remove old custom styles - Bootstrap handles these now */
 }
 
-/* Main Content */
-main {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 2rem;
-  flex: 1;
-}
 
 /* Page Titles */
 .page-title {
@@ -166,6 +159,13 @@ main {
 .page-title p {
   font-size: 1.2rem;
   color: #666;
+}
+section {
+  padding: 100px 0;
+  gap: 2rem;
+}
+.alternate-bg {
+  background: linear-gradient(135deg, #f0f8f4, #e0f2e0);
 }
 
 /* Home Page Styles */
@@ -258,8 +258,7 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     gap: 1.5rem;
-    margin: 2rem 0;
-}
+  }
 
 .animal-card {
     background: white;
@@ -996,9 +995,32 @@ main {
     justify-content: center;
   }
 }
+/* Animal List Styling */
+#animal-list-reserve {
+  border: none;
+  list-style: none;
+}
 
-/* Add Font Awesome for social icons (add to HTML head) */
-/* Include this in your HTML head if not already present:
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-*/
+#animal-list-reserve li {
+  background: white;
+  border: 1px solid #e9ecef;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
 
+#animal-list-reserve li:hover {
+  background: #f8f9fa;
+  border-color: #2c5530;
+  transform: translateX(5px);
+}
+
+
+.map-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
