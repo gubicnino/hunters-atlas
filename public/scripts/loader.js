@@ -1,5 +1,7 @@
 $(document).ready(function() {
     loadFontAwesome();
+    loadGoogleFonts();
+
 
     $("#header").load("header.html");
     $("#footer").load("footer.html", () => {
@@ -38,6 +40,16 @@ function loadFontAwesome() {
         link.rel = 'stylesheet';
         link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
         link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+    }
+}
+
+function loadGoogleFonts() {
+    // Check if Google Fonts are already loaded
+    if (!document.querySelector('link[href*="fonts.googleapis.com"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap';
         document.head.appendChild(link);
     }
 }

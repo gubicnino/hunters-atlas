@@ -2,8 +2,15 @@ let allAnimals = []; // Store all animals globally
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Load the animal data from the server
-    fetch('/animals')
+    if (window.location.pathname === '/specific_reserve.html') {
+        const url = new URL(window.location.href);
+        const reserveID = url.searchParams.get('reserveID');
+        fetchAnimalData(`/animals?reserve=${reserveID}`);
+    }
+    else fetchAnimalData();
+});
+function fetchAnimalData(reqUrl = '/animals') {
+    fetch(reqUrl)
         .then(response => response.json())
         .then(data => {
             console.log('Animal data loaded:', data);
@@ -14,8 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
             console.error('Error loading animal data:', error);
         });
-});
-
+}
 function displayAnimals(animals) {
     const animalContainer = document.getElementById('animal-grid');
     animalContainer.innerHTML = animals.map(animal => `
@@ -93,7 +99,7 @@ function setupFilters() {
     const searchInput = document.getElementById('search-input');
     const classFilter = document.getElementById('class-filter');
     const reserveFilter = document.getElementById('reserve-filter');
-    
+
     // Search functionality
     searchInput?.addEventListener('input', filterAnimals);
     classFilter?.addEventListener('change', filterAnimals);
@@ -104,24 +110,24 @@ function filterAnimals() {
     const searchTerm = document.getElementById('search-input')?.value.toLowerCase() || '';
     const selectedClass = document.getElementById('class-filter')?.value || '';
     const selectedReserve = document.getElementById('reserve-filter')?.value || '';
-    
+
     const filteredAnimals = allAnimals.filter(animal => {
         // Search by name
         const matchesSearch = animal.name.toLowerCase().includes(searchTerm);
-        
+
         // Filter by class
         const matchesClass = !selectedClass || animal.class.toString() === selectedClass;
-        
+
         // Filter by reserve
-        const matchesReserve = !selectedReserve || 
-            (animal.reserves_with_need_zones && 
-             animal.reserves_with_need_zones.some(reserve => 
-                 reserve.reserve_name === selectedReserve
-             ));
-        
+        const matchesReserve = !selectedReserve ||
+            (animal.reserves_with_need_zones &&
+                animal.reserves_with_need_zones.some(reserve =>
+                    reserve.reserve_name === selectedReserve
+                ));
+
         return matchesSearch && matchesClass && matchesReserve;
     });
-    
+
     displayAnimals(filteredAnimals);
 }
 
@@ -132,8 +138,8 @@ function createFurVariants(furVariants) {
     }
 
     // Return HTML string instead of DOM element
-    return furVariants.map(variant => 
-        variant.rarity === 'very rare' 
+    return furVariants.map(variant =>
+        variant.rarity === 'very rare'
             ? `<span class="fur-item very-rare">${variant.variant}</span>`
             : `<span class="fur-item ${variant.rarity.toLowerCase()}">${variant.variant}</span>`
     ).join('');
@@ -141,14 +147,14 @@ function createFurVariants(furVariants) {
 
 
 function createNeedZoneTab(reserves, animalName) {
-    if (!reserves || reserves.length === 0) {   
+    if (!reserves || reserves.length === 0) {
         return '<p>No need zones available</p>';
     }
     const safeAnimalName = animalName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
 
     return reserves.map((reserve, index) => {
         const safeReserveName = reserve.reserve_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
-        return`
+        return `
         <div class="tab-pane fade ${index == 0 ? 'show active' : ''}" id="${safeAnimalName}-${safeReserveName}-tab-pane" role="tabpanel">
             <div class="zone-row">
                 <span class="zone-type feed">Feed</span>
@@ -173,8 +179,8 @@ function createTabMenu(reserves, animalName) {
 
     return reserves.map((reserve, index) => {
         const safeReserveName = reserve.reserve_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
-        
-        return`
+
+        return `
         <li class="nav-item">
             <a class="nav-link ${index === 0 ? 'active' : ''}" 
                id="${safeAnimalName}-${safeReserveName}-tab" 
