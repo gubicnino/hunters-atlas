@@ -99,10 +99,11 @@ FROM
 LEFT JOIN 
     trophy_ratings tr ON a.id = tr.animal_id
 -- WHERE clause removed to get all animals
-ORDER BY 
-    a.name;
 WHERE 
     r.id = ${reserveID}
+ORDER BY 
+    a.name;
+
         `
         .then(animals => {
             res.json(animals);
