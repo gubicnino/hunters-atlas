@@ -4,12 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function setHotspotMap(animal) {
-    const mapImg = document.getElementById('map-image');
-    const mapUrl = `/images/maps/te-awaroa/${animal}.png`;
-    mapImg.src = mapUrl;
-    mapImg.alt = `Hotspot map for ${animal}`;
-}
+
 function loadReserveName(reserveName) {
 
     // Update the reserve name in the description
@@ -67,12 +62,43 @@ function enableHotspotLoading(reserve_name) {
     const animalReserveList = document.getElementById('animal-list-reserve');
     const mapImg = document.getElementById('map-image');
     const editedReserveName = reserve_name.trim().replace(" ", "-").toLowerCase();
-    mapImg.src = `/images/maps/${editedReserveName}/${animalReserveList.querySelector("li").textContent.trim().replace(" ", "-").toLowerCase()}.png`;
+
+    const firstAnimal = animalReserveList.querySelector("li")?.textContent.trim().replace(" ", "-").toLowerCase();
+    if (firstAnimal) {
+        setHotspotMap(firstAnimal, editedReserveName);
+    }
+    
     animalReserveList.querySelectorAll("li").forEach((item) => {
         const text = item.textContent.trim().replace(" ", "-").toLowerCase();
         console.log('Hotspot map set for:', text);
         item.addEventListener('click', () => {
-            setHotspotMap(text);
+            setHotspotMap(text, editedReserveName);
         });
     });
+}
+function setHotspotMap(animal, reserveName) {
+    const mapImg = document.getElementById('map-image');
+    const basePath = `/images/maps/${reserveName}/${animal}`;
+    
+    // Try different formats in order of preference
+    const formats = ['png', 'jpg', 'jpeg', 'webp'];
+    
+    tryImageFormat(mapImg, basePath, formats, 0, animal);
+}
+
+function tryImageFormat(imgElement, basePath, formats, index, animal) {
+    if (index >= formats.length) {
+        console.error(`No image found for ${animal}`);
+        return;
+    }
+    
+    const testImg = new Image();
+    testImg.onload = function() {
+        imgElement.src = `${basePath}.${formats[index]}`;
+        imgElement.alt = `Hotspot map for ${animal}`;
+    };
+    testImg.onerror = function() {
+        tryImageFormat(imgElement, basePath, formats, index + 1, animal);
+    };
+    testImg.src = `${basePath}.${formats[index]}`;
 }
