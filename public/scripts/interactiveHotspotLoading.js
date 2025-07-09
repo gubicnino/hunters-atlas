@@ -53,8 +53,9 @@ function displayReserveDetails(reserves) {
         reserveImgElement.alt = `Map of ${reserve.reserve_name}`;
 
         // Populate the animal list
-        if (reserve.animals_in_reserve && Array.isArray(reserve.animals_in_reserve)) {
-            animalListElement.innerHTML = reserve.animals_in_reserve.map(animal => `<li id="${animal.name.trim().replace(" ", "-").toLowerCase()}">${animal.name}</li>`).join('');
+        if (reserve.animals_in_reserve) {
+            const animalArray = reserve.animals_in_reserve.split(',').map(animal => animal.trim());
+            animalListElement.innerHTML = animalArray.map(animal => `<li id="${animal.trim().replace(" ", "-").toLowerCase()}">${animal}</li>`).join('');
         } else {
             animalListElement.innerHTML = '<li>No animals found in this reserve.</li>';
         }

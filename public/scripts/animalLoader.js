@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname === '/specific_reserve.html') {
         const url = new URL(window.location.href);
         const reserveID = url.searchParams.get('reserveID');
-        fetchAnimalData(`/animals/${reserveID}`);
+        fetchAnimalData(`/animals?reserveID=${reserveID}`); // ✅ Changed this line
     }
     else fetchAnimalData();
 });
