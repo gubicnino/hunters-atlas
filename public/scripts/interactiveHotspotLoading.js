@@ -11,13 +11,13 @@ function setHotspotMap(animal) {
     mapImg.alt = `Hotspot map for ${animal}`;
 }
 function loadReserveName(reserveName) {
-    
+
     // Update the reserve name in the description
     const reserveNameElement = document.getElementById('reserve-name-placeholder');
     if (reserveNameElement) {
         reserveNameElement.textContent = reserveName;
     }
-    
+
     // Also update the page title
     const mainTitle = document.getElementById('reserve-name');
     if (mainTitle) {
@@ -39,28 +39,32 @@ function loadReserveData() {
             console.error('Error loading reserve data:', error);
         });
 }
-function displayReserveDetails(reserve) {
-    loadReserveName(reserve.reserve_name);
-    const reserveDescriptionElement = document.getElementById('reserve-ingame-description');
-    const animalListElement = document.getElementById('animal-list-reserve');
-    const reserveImgElement = document.getElementById('reserve-image');
+function displayReserveDetails(reserves) {
+    reserves.forEach((reserve) => {
+        console.log('Displaying reserve:', reserve);
+        loadReserveName(reserve.reserve_name);
+        const reserveDescriptionElement = document.getElementById('reserve-ingame-description');
+        const animalListElement = document.getElementById('animal-list-reserve');
+        const reserveImgElement = document.getElementById('reserve-image');
 
-    reserveDescriptionElement.textContent = reserve.description || 'No description available for this reserve.';
+        reserveDescriptionElement.textContent = reserve.description || 'No description available for this reserve.';
 
-    reserveImgElement.src = reserve.map_url || '';
-    reserveImgElement.alt = `Map of ${reserve.reserve_name}`;
+        reserveImgElement.src = reserve.map_url || '';
+        reserveImgElement.alt = `Map of ${reserve.reserve_name}`;
 
-    // Populate the animal list
-    if (reserve.animals_in_reserve && Array.isArray(reserve.animals_in_reserve)) {
-        animalListElement.innerHTML = reserve.animals_in_reserve.map(animal => `<li id="${animal.name.trim().replace(" ", "-").toLowerCase()}">${animal.name}</li>`).join('');
-    } else {
-        animalListElement.innerHTML = '<li>No animals found in this reserve.</li>';
-    }
-    enableHotspotLoading();
+        // Populate the animal list
+        if (reserve.animals_in_reserve && Array.isArray(reserve.animals_in_reserve)) {
+            animalListElement.innerHTML = reserve.animals_in_reserve.map(animal => `<li id="${animal.name.trim().replace(" ", "-").toLowerCase()}">${animal.name}</li>`).join('');
+        } else {
+            animalListElement.innerHTML = '<li>No animals found in this reserve.</li>';
+        }
+        enableHotspotLoading();
+    });
+
 }
 function enableHotspotLoading() {
     const animalReserveList = document.getElementById('animal-list-reserve');
-    const mapImg =  document.getElementById('map-image');
+    const mapImg = document.getElementById('map-image');
     mapImg.src = `/images/maps/te-awaroa/${animalReserveList.querySelector("li").textContent.trim().replace(" ", "-").toLowerCase()}.png`;
     animalReserveList.querySelectorAll("li").forEach((item) => {
         const text = item.textContent.trim().replace(" ", "-").toLowerCase();

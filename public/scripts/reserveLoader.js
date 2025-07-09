@@ -24,7 +24,7 @@ function displayReserves(reserves) {
                 <div class="reserve-content">
                     <h4>Animals in Reserve</h4>
                     <ul class="animals-list">${reserve.animals_in_reserve}</ul>
-                    <button class="btn btn-primary" onclick="window.location.href='specific_reserve.html?reserveID=${reserve.reserve_id}'">View Details</button>
+                    <button class="btn btn-primary mt-3" onclick="window.location.href='specific_reserve.html?reserveID=${reserve.reserve_id}'">View Details</button>
                 </div>
             </div>
         </div>
