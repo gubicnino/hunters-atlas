@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +9,29 @@
     <script src="./scripts/reserveLoader.js" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="/scripts/loader.js" defer></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 </head>
+
 <body>
     <header id="header"></header>
 
     <main>
-        <section class="page-title">
-            <h1>Hunting Reserves</h1>
-            <p>Explore all hunting destinations in The Hunter: Call of the Wild</p>
-        </section>
-        <section class="reserves-section">
+        <section class="reserves-section alternate-bg   ">
             <div class="container">
-                <div class="row g-3" id="reserves-row">
+                <div class="row">
+                    <div class="col-12 title-container">
+                        <h1>Hunting Reserves</h1>
+                        <p>Explore all hunting destinations in The Hunter: Call of the Wild</p>
+                    </div>
+                </div>
+                <div class="filter-container row g-3 mb-5 d-flex align-items-center justify-content-center">
+                    <div class="search-box  col-md-8 ">
+                        <input type="text" id="search-input" placeholder="Search reserves..." class="form-control">
+                    </div>
+                </div>
+                <div class="row g-3 d-flex" id="reserves-row">
                     <!-- Reserves will be dynamically loaded here -->
                 </div>
             </div>
@@ -32,4 +42,5 @@
     <footer id="footer"> </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

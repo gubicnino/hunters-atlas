@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function displayReserves(reserves) {
     const reserveContainer = document.getElementById('reserves-row');
     reserveContainer.innerHTML = reserves.map(reserve => `
-        <div class="col-12 col-lg-4 col-md-6">
+        <div class="col-12 col-lg-4 col-md-6" style="flex:1>
             <div class="reserve-card">
                 <div class="reserve-header">
                     <h3>${reserve.reserve_name}</h3>

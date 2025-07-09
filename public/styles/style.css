@@ -663,9 +663,10 @@ section {
     flex-direction: column;
     justify-content: space-between;
     align-items: start;
+    background-color: var(--white);
     padding: 1.5rem;
-    background-color: var(--bg-secondary);
     gap: 0.3rem;
+    flex: 1;
 }
 
 .reserve-card:hover {
@@ -1059,3 +1060,11 @@ section {
   color: var(--primary-medium);
   font-size: 2.5rem;
 }
+
+.title-container {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.title-container h1 {
+  color: var(--primary-dark);
+}   
