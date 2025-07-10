@@ -81,7 +81,7 @@ function setHotspotMap(animal, reserveName) {
     const basePath = `/images/maps/${reserveName}/${animal}`;
     
     // Try different formats in order of preference
-    const formats = ['png', 'jpg', 'jpeg', 'webp'];
+    const formats = ['png', 'webp', 'jpg', 'jpeg'];
     
     tryImageFormat(mapImg, basePath, formats, 0, animal);
 }

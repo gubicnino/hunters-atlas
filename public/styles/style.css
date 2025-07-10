@@ -1068,3 +1068,8 @@ section {
 .title-container h1 {
   color: var(--primary-dark);
 }   
+
+#reserves-row {
+  display: flex;
+  align-items: stretch;
+}

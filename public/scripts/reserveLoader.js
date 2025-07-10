@@ -1,10 +1,14 @@
+let reserveData = [];
+
 document.addEventListener('DOMContentLoaded', () => {
     // Load the reserve data from the server
     fetch('/reserves')
         .then(response => response.json())
         .then(data => {
             console.log('Reserve data loaded:', data);
+            reserveData = data;
             displayReserves(data);
+            setupFilters();
         })
         .catch(error => {
             console.error('Error loading reserve data:', error);
@@ -14,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function displayReserves(reserves) {
     const reserveContainer = document.getElementById('reserves-row');
     reserveContainer.innerHTML = reserves.map(reserve => `
-        <div class="col-12 col-lg-4 col-md-6" style="flex:1>
+        <div class="col-12 col-lg-4 col-md-6 d-flex flex-column h-100">
             <div class="reserve-card">
                 <div class="reserve-header">
                     <h3>${reserve.reserve_name}</h3>
@@ -30,10 +34,19 @@ function displayReserves(reserves) {
         </div>
     `).join('');
 }
-function createAnimalList(animals) {
-    const animalArray = animals.split(', ').map(animal => animal.trim()).filter(animal => animal);
-    if (animalArray.length === 0) {
-        return '<li>No animals in this reserve</li>';
-    }
-    return animalArray.map(animal => `<li>${animal}</li>`).join('');
+
+function setupFilters() {
+    const searchInput = document.getElementById('search-input');
+    // Search functionality
+    searchInput?.addEventListener('input', () => {
+        const searchTerm = document.getElementById('search-input')?.value.toLowerCase() || '';
+
+        const filteredReserves = reserveData.filter(reserve => {
+            // Search by name
+            const matchesSearch = reserve.reserve_name.toLowerCase().includes(searchTerm);
+            return matchesSearch;
+        });
+
+        displayReserves(filteredReserves);
+    });
 }
