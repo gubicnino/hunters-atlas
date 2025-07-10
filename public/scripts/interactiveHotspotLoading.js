@@ -50,7 +50,7 @@ function displayReserveDetails(reserves) {
         // Populate the animal list
         if (reserve.animals_in_reserve) {
             const animalArray = reserve.animals_in_reserve.split(',').map(animal => animal.trim());
-            animalListElement.innerHTML = animalArray.map(animal => `<li id="${animal.trim().replace(" ", "-").toLowerCase()}">${animal}</li>`).join('');
+            animalListElement.innerHTML = animalArray.map(animal => `<li id="${animal.trim().replaceAll(" ", "-").toLowerCase()}">${animal}</li>`).join('');
         } else {
             animalListElement.innerHTML = '<li>No animals found in this reserve.</li>';
         }
@@ -61,15 +61,15 @@ function displayReserveDetails(reserves) {
 function enableHotspotLoading(reserve_name) {
     const animalReserveList = document.getElementById('animal-list-reserve');
     const mapImg = document.getElementById('map-image');
-    const editedReserveName = reserve_name.trim().replace(" ", "-").toLowerCase();
+    const editedReserveName = reserve_name.trim().replaceAll(" ", "-").toLowerCase();
 
-    const firstAnimal = animalReserveList.querySelector("li")?.textContent.trim().replace(" ", "-").toLowerCase();
+    const firstAnimal = animalReserveList.querySelector("li")?.textContent.trim().replaceAll(" ", "-").toLowerCase();
     if (firstAnimal) {
         setHotspotMap(firstAnimal, editedReserveName);
     }
     
     animalReserveList.querySelectorAll("li").forEach((item) => {
-        const text = item.textContent.trim().replace(" ", "-").toLowerCase();
+        const text = item.textContent.trim().replaceAll(" ", "-").toLowerCase();
         console.log('Hotspot map set for:', text);
         item.addEventListener('click', () => {
             setHotspotMap(text, editedReserveName);
@@ -89,6 +89,10 @@ function setHotspotMap(animal, reserveName) {
 function tryImageFormat(imgElement, basePath, formats, index, animal) {
     if (index >= formats.length) {
         console.error(`No image found for ${animal}`);
+        const notFoundPlaceholder = document.getElementById('notFoundPlaceholder');
+        if (notFoundPlaceholder) {
+            notFoundPlaceholder.textContent = `Hotspot map for ${animal} not found.`;
+        }
         return;
     }
     
