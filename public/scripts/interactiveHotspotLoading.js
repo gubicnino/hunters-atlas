@@ -91,8 +91,9 @@ function tryImageFormat(imgElement, basePath, formats, index, animal) {
         console.error(`No image found for ${animal}`);
         const notFoundPlaceholder = document.getElementById('notFoundPlaceholder');
         if (notFoundPlaceholder) {
-            notFoundPlaceholder.textContent = `Hotspot map for ${animal} not found.`;
+            notFoundPlaceholder.textContent = `Hotspot map for ${animal.replaceAll("-", " ")} not found.`;
         }
+        imgElement.src = ''; // Clear the image source
         return;
     }
     
