@@ -14,6 +14,10 @@
   --text-gray: #495057;
   --text-light: #6c757d;
   --text-dark: #333;
+  --black: #000000;
+  --black8: rgba(0, 0, 0, 0.8);
+  --black5: rgba(0, 0, 0, 0.5);
+  --black3: rgba(0, 0, 0, 0.3);
   
   /* Background Colors */
   --bg-primary: #f8f9fa;
@@ -130,6 +134,11 @@ p {
   line-height: 1.6;
   margin-bottom: 1rem;
   color: var(--text-gray);
+}
+a {
+  color: var(--primary-medium) !important;
+  text-decoration: none !important;
+  transition: var(--transition-fast) !important;
 }
 
 p:last-child {
@@ -1073,4 +1082,24 @@ section {
 #reserves-row {
   display: flex;
   align-items: stretch;
+}
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 40px !important;
+  background: var(--bg-alternate);
+  box-shadow: var(--shadow-light);
+  height: 100vh;
+}
+.side-menu a {
+  color: var(--black) !important;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border-gray);
+  margin: 1rem 0;
 }
