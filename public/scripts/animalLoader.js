@@ -148,7 +148,7 @@ function createAnimalReserves(reserves) {
     }
     return reserves.map(reserve => {
         return `<span class="reserve-tag">${reserve.reserve_name}</span>`;
-    }).join('');
+    }).join(', ');
 }
 
 function createNeedZoneTab(reserves, animalName) {
