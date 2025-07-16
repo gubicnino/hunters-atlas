@@ -22,7 +22,7 @@ function loadReserveName(reserveName) {
 
 function loadReserveData() {
     const urlParams = new URLSearchParams(window.location.search);
-    const reserveID = urlParams.get('reserveID') || '1'; // Default to 1 if not provided
+    const reserveID = urlParams.get('reserveID') || '1';
 
     fetch(`/reserves/${reserveID}`)
         .then(response => response.json())

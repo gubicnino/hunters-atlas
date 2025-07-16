@@ -85,9 +85,7 @@ function displayAnimals(animals) {
                 <div class="reserves-section">
                     <h4>Reserves</h4>
                     <div class="reserves-compact">
-                        <span class="reserve-tag">Layton Lake</span>
-                        <span class="reserve-tag">Hirschfelden</span>
-                        <span class="reserve-tag">Medved-Taiga</span>
+                        ${createAnimalReserves(animal.reserves_with_need_zones)}
                     </div>
                 </div>
             </div>
@@ -144,7 +142,14 @@ function createFurVariants(furVariants) {
             : `<span class="fur-item ${variant.rarity.toLowerCase()}">${variant.variant}</span>`
     ).join('');
 }
-
+function createAnimalReserves(reserves) {
+    if (!reserves || reserves.length === 0) {
+        return '<span class="reserve-tag">No reserves available</span>';
+    }
+    return reserves.map(reserve => {
+        return `<span class="reserve-tag">${reserve.reserve_name}</span>`;
+    }).join('');
+}
 
 function createNeedZoneTab(reserves, animalName) {
     if (!reserves || reserves.length === 0) {
