@@ -32,41 +32,15 @@
         <section class="great-one-section">
             <div class="container">
                 <div class="row g-5">
-                    <div class="col-4 side-menu">
+                    <div class="col-4 side-menu" id="sideMenuContainer">
                         <h4 class="side-header">Navigation</h4>
                         <div class="divider"></div>
-                        <a href="#" class="addButton" id="addButton">New Great One</a>
-                        <a class="sidebar-nav-link" href="#">Great one 1</a>
-                        <a class="sidebar-nav-link" href="#">Great one 2</a>
-                        <a class="sidebar-nav-link" href="#">Great one 3</a>
+                        <a href="#" class="addButton" id="addButton"><i class="fa-solid fa-plus me-3"></i>New Great One</a>
+                        <ul class="nav nav-tabs  d-flex flex-column" id="sideMenu"> </ul>
                     </div>
                     <div class="col-8 main-content">
                         <div class="row">
-                            <div class="col-12" id="greatOneContainer">
-                                <div class="great-one-card" id="greatOneCard">
-                                    <div class="content-card">
-                                        <div class="card-header">
-                                            <h5 class="card-subheader">Great One Number: 1</h5>
-                                            <h3>Fallow Deer</h3>
-                                            <div class="card-kills">
-                                                <p class="kill-counter">Current Kills: <span id="kill-count">289</span>
-                                                </p>
-                                                <i class="fa-solid fa-plus calculatorIcons" id="killPlus"></i>
-                                                <i class="fa-solid fa-minus calculatorIcons"  id="killMinus"></i>
-                                            </div>
-                                        </div>
-                                        <div class="divider-white"></div>
-                                        <div class="card-body">
-                                            <button class="btn-secondary" id="openCalculator">Open Calculator</button>
-                                        </div>
-                                    </div>
-                                    <h3 class="mt-3">Mark Your Zones</h3>
-                                    <div class="card-image" id="mapContainer">
-                                        <img src="images/maps/Te-Awaroa-map.jpg" alt="" class="img-fluid"
-                                            id="greatOneMap">
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="col-12 tab-content" id="greatOneContainer"></div>
                         </div>
                     </div>
                 </div>
@@ -137,7 +111,58 @@
                 </div>
             </div>
         </div>
-
+        <!-- Modal for new great one  -->
+        <div class="modal fade" id="modalNewGreatOne" tabindex="-1" aria-labelledby="newGreatOneLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="modalNewGreatOneForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalNewGreatOneLabel">Add New Great One</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control" id="newGreatOneLabel" placeholder="Enter Great One Label"
+                                required />
+                            <select name="newGreatOneSpecies" id="newGreatOneSpecies" class="form-select mt-3 mb-3">
+                                <option value="">Select Great One Species</option>
+                                <option value="whitetail-deer">Whitetail Deer</option>
+                                <option value="red-deer">Red Deer</option>
+                                <option value="black-bear">Black Bear</option>
+                                <option value="moose">Moose</option>
+                                <option value="fallow-deer">Fallow Deer</option>
+                                <option value="tahr">Tahr</option>
+                                <option value="red-fox">Red Fox</option>
+                                <option value="ring-necked-pheasant">Ring-necked Pheasant</option>
+                                <option value="mule-deer">Mule Deer</option>
+                            </select>
+                            <select name="newGreatOneMap" id="newGreatOneMap" class="form-select mt-3 mb-3">
+                                <option value="">Select Hunting Reserve</option>
+                                <option value="medved-taiga">Medved-Taiga National Park</option>
+                                <option value="vurhonga-savanna">Vurhonga Savanna</option>
+                                <option value="parque-fernando">Parque Fernando</option>
+                                <option value="yukon-valley">Yukon Valley</option>
+                                <option value="cuatro-colinas">Cuatro Colinas Game Reserve</option>
+                                <option value="silver-ridge-peaks">Silver Ridge Peaks</option>
+                                <option value="te-awaroa">Te Awaroa National Park</option>
+                                <option value="rancho-del-arroyo">Rancho del Arroyo</option>
+                                <option value="mississippi-acres">Mississippi Acres Preserve</option>
+                                <option value="revontuli-coast">Revontuli Coast</option>
+                                <option value="new-england-mountains">New England Mountains</option>
+                                <option value="emerald-coast">Emerald Coast</option>
+                                <option value="sundarpatan">Sundarpatan</option>
+                                <option value="salzwiesen-park">Salzwiesen Park</option>
+                                <option value="askiy-ridge">Askiy Ridge Hunting Preserve</option>
+                                <option value="hirschfelden">Hirschfelden Hunting Reserve</option>
+                                <option value="layton-lake">Layton Lake District</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Add Great One</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer id="footer"> </footer>

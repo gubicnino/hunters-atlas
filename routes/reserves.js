@@ -62,4 +62,24 @@ router.get('/:id', function (req, res, next) {
             res.status(500).json({ error: 'Internal Server Error' });
         });
 });
+router.get('/map/:map', function (req, res, next) {
+    console.log('Fetching reserve for map:', req.params.map);
+    const cleanMap = req.params.map.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    sql`
+            SELECT 
+    r.map_url,
+    r.name AS reserve_name
+FROM
+    reserves r
+WHERE
+    r.name = ${cleanMap}
+        `
+        .then(reserves => {
+            res.json(reserves);
+        })
+        .catch(error => {
+            console.error('Error fetching animals:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        });
+});
 module.exports = router;
