@@ -12,6 +12,8 @@ function createPins() {
     const animalCountInputFemale = document.getElementById('animalCountInputFemale');
     const countForm = document.getElementById('countForm');
     const countModalLabel = document.getElementById('countModalLabel');
+    const deleteZoneButton = document.getElementById('deleteZone');
+
 
     let clickX = 0, clickY = 0;
     let editingPin = null;
@@ -31,6 +33,14 @@ function createPins() {
             countModal.show();
         });
     }
+
+    deleteZoneButton.addEventListener('click', function() {
+        if (editingPin) {
+            editingPin.remove();
+            countModal.hide();
+            editingPin = null;
+        }
+    });
 
     countForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -109,7 +119,50 @@ function killCounter() {
 function calculator() {
     const modalCalculator = new bootstrap.Modal(document.getElementById('modalCalculator'));
     const openCalculatorButton = document.getElementById('openCalculator');
+    const calculatorForm = document.getElementById('modalCalculatorForm');
     openCalculatorButton.addEventListener('click', function () {
         modalCalculator.show();
     });
+    calculatorForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const beforeCount = parseInt(document.getElementById('beforeCount').value) || 0;
+        const afterCount = parseInt(document.getElementById('afterCount').value) || 0;
+        const totalCount =  afterCount - beforeCount;
+        const killCount = document.getElementById('kill-count');
+        const currentCount = parseInt(killCount.textContent) || 0;
+        const finalCount = currentCount + totalCount;
+        killCount.textContent = finalCount;
+        modalCalculator.hide();
+        showKillCountToast(totalCount, finalCount);
+        document.getElementById('beforeCount').value = '';
+        document.getElementById('afterCount').value = '';
+    });
+}
+
+function showKillCountToast(addedKills, totalKills) {
+    const toastHtml = `
+        <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <strong>+${addedKills}</strong> kills added! Total: <strong>${totalKills}</strong>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    `;
+    
+    // Create toast container if it doesn't exist
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        document.body.appendChild(toastContainer);
+    }
+    
+    // Add toast to container
+    toastContainer.innerHTML = toastHtml;
+    const toastElement = toastContainer.querySelector('.toast');
+    const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+    toast.show();
 }

@@ -149,6 +149,18 @@ a {
 p:last-child {
   margin-bottom: 0;
 }
+.btn-secondary {
+  background: var(--white) !important; 
+  border: none !important;
+  color: var(--primary-medium) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 5px !important;
+  transition: var(--transition-fast) !important;
+}
+
+.btn-secondary:hover {
+  background: var(--medium-gray) !important;
+}
 
 /* Enhanced Header and Navigation with Bootstrap */
 .custom-navbar {
@@ -1229,4 +1241,10 @@ section {
 .calculatorIcons {
   cursor: pointer;
   font-size: 1rem;
+}
+
+#deleteZone {
+  padding: 0.5rem;
+  cursor: pointer;
+  margin-top: 1rem !important;
 }
