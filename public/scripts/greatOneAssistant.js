@@ -195,7 +195,7 @@ function createGreatOneTab(species, map, label) {
         .then(response => response.json())
         .then(data => {
             const newData = data[0];
-            const mapUrl = newData.map_url || 'images/maps/default-map.jpg';
+            const mapUrl = newData.map_url;
             const newGreatOneCard = `
                 <div class="great-one-card tab-pane active show" id="greatOne${newGreatOneId}" role="tabpanel" aria-labelledby="greatOne${newGreatOneId}-tab">
                     <div class="content-card">
@@ -378,4 +378,113 @@ function removeShowActiveTab() {
     if (activeLink) {
         activeLink.classList.remove('active');
     }
+}
+
+
+async function saveGreatOneProgress(cardId, species, reserve, killCount, zones) {
+    if (!window.supabase) return;
+    
+    try {
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!user) return;
+
+        const greatOneData = {
+            user_id: user.id,
+            species: species,
+            reserve: reserve,
+            kill_count: killCount,
+            zones: zones
+        };
+
+        // Check if this Great One already exists
+        const existingId = document.getElementById(cardId).dataset.greatOneId;
+        
+        if (existingId) {
+            // Update existing
+            const { error } = await window.supabase
+                .from('user_great_ones')
+                .update(greatOneData)
+                .eq('id', existingId);
+                
+            if (error) throw error;
+        } else {
+            // Create new
+            const { data, error } = await window.supabase
+                .from('user_great_ones')
+                .insert(greatOneData)
+                .select();
+                
+            if (error) throw error;
+            
+            // Store the ID for future updates
+            document.getElementById(cardId).dataset.greatOneId = data[0].id;
+        }
+        
+        console.log('Great One progress saved');
+    } catch (error) {
+        console.error('Error saving Great One progress:', error);
+    }
+}
+
+async function loadUserGreatOnes() {
+    if (!window.supabase) return;
+    
+    try {
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await window.supabase
+            .from('user_great_ones')
+            .select('*')
+            .eq('user_id', user.id);
+            
+        if (error) throw error;
+        
+        // Recreate Great One tabs from saved data
+        data.forEach(greatOne => {
+            createGreatOneTabFromData(greatOne);
+        });
+        
+    } catch (error) {
+        console.error('Error loading Great Ones:', error);
+    }
+}
+
+// Auto-save functionality
+function setupAutoSave(cardId) {
+    const card = document.getElementById(cardId);
+    let saveTimeout;
+    
+    // Auto-save when kill count changes
+    const killCountElement = card.querySelector(`#kill-count-${cardId.replace('greatOne', '')}`);
+    const observer = new MutationObserver(() => {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            saveCurrentGreatOne(cardId);
+        }, 1000); // Save 1 second after last change
+    });
+    
+    if (killCountElement) {
+        observer.observe(killCountElement, { childList: true, subtree: true });
+    }
+}
+
+function saveCurrentGreatOne(cardId) {
+    const card = document.getElementById(cardId);
+    const species = card.querySelector('h3').textContent;
+    const reserve = card.querySelector('.card-image img').alt.replace('Map of ', '');
+    const killCount = parseInt(card.querySelector(`#kill-count-${cardId.replace('greatOne', '')}`).textContent);
+    
+    // Collect zones data
+    const zones = [];
+    card.querySelectorAll('.pin').forEach(pin => {
+        zones.push({
+            x: parseFloat(pin.style.left),
+            y: parseFloat(pin.style.top),
+            male: parseInt(pin.dataset.male || 0),
+            female: parseInt(pin.dataset.female || 0)
+        });
+    });
+    
+    saveGreatOneProgress(cardId, species, reserve, killCount, zones);
 }

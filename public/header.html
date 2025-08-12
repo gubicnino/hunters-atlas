@@ -33,7 +33,45 @@
                         Great One Assistant
                     </a>
                 </li>
+                <li class="nav-item" id="prijavaNav">
+                    <a href="#" id="prijava" class="nav-link">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+<!-- Add this modal HTML before closing </body> tag -->
+<div class="login-modal" id="loginModal">
+    <div class="login-modal-content">
+        <span class="login-modal-close" id="closeLoginModal">&times;</span>
+        <div class="logo-login">
+            <div class="d-flex align-items-center logoWrapper">
+                <h3>Login now</h3>
+            </div>
+        </div>
+        
+        <form id="loginForm">
+            <div class="login-form-group">
+                <input type="text" id="loginEmail" placeholder="Email*" required class="input-shadow">
+            </div>
+            <div class="login-form-group">
+                <div class="password-field">
+                    <input type="password" id="loginPassword" placeholder="Password*" required class="input-shadow">
+                    <span class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">LOGIN</button>
+            <div id="loginError" class="alert alert-danger mt-3" style="display: none;"></div>
+            <div id="loginSuccess" class="alert alert-success mt-3" style="display: none;"></div>
+        </form>
+        
+        <div class="register-link">
+            Don't have an account? <a href="register.html">Register here</a>
+        </div>
+    </div>
+</div>
