@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     addGreatOne();
+    
+    // Load user's saved Great Ones when page loads
+    loadUserGreatOnes();
 });
 
 function createPins() {
@@ -183,6 +186,7 @@ function addGreatOne() {
         });
     });
 }
+// Update the createGreatOneTab function to include auto-save setup
 function createGreatOneTab(species, map, label) {
     const sideMenu = document.getElementById('sideMenu');
     const greatOneContainer = document.getElementById('greatOneContainer');
@@ -215,7 +219,7 @@ function createGreatOneTab(species, map, label) {
                     </div>
                     <h3 class="mt-3">Mark Your Zones</h3>
                     <div class="card-image" id="mapContainer-${newGreatOneId}">
-                        <img src="${mapUrl}" alt="" class="img-fluid" id="greatOneMap-${newGreatOneId}">
+                        <img src="${mapUrl}" alt="Map of ${map}" class="img-fluid" id="greatOneMap-${newGreatOneId}">
                     </div>
                 </div>
             `;
@@ -225,6 +229,92 @@ function createGreatOneTab(species, map, label) {
             
             // Initialize functionality for this specific card
             initializeCardFunctionality(newGreatOneId);
+            
+            // Setup auto-save for this new card
+            setupAutoSave(`greatOne${newGreatOneId}`);
+        })
+        .catch(error => {
+            console.error('Error loading reserve data:', error);
+        });
+}
+
+function createGreatOneTabFromData(greatOneData) {
+    const sideMenu = document.getElementById('sideMenu');
+    const greatOneContainer = document.getElementById('greatOneContainer');
+    const currentGreatOneCount = sideMenu.children.length;
+    const cleanSpecies = greatOneData.species.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const cleanMap = greatOneData.reserve.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const newGreatOneId = currentGreatOneCount + 1;
+    const newGreatOneLink = `<li class="nav-item" role="presentation"><button class="nav-link sidebar-nav-link" data-bs-toggle="tab" data-bs-target="#greatOne${newGreatOneId}" type="button" role="tab" aria-controls="greatOne${newGreatOneId}" aria-selected="false">${cleanSpecies} - ${cleanMap}</button></li>`;
+    
+    fetch(`/reserves/map/${greatOneData.reserve}`)
+        .then(response => response.json())
+        .then(data => {
+            const newData = data[0];
+            const mapUrl = newData.map_url;
+            const newGreatOneCard = `
+                <div class="great-one-card tab-pane" id="greatOne${newGreatOneId}" role="tabpanel" aria-labelledby="greatOne${newGreatOneId}-tab" data-great-one-id="${greatOneData.id}">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h5 class="card-subheader">Great One Number: ${newGreatOneId}</h5>
+                            <h3>${cleanSpecies}</h3>
+                            <div class="card-kills">
+                                <p class="kill-counter">Current Kills: <span id="kill-count-${newGreatOneId}">${greatOneData.kill_count}</span></p>
+                                <i class="fa-solid fa-plus calculatorIcons" id="killPlus-${newGreatOneId}"></i>
+                                <i class="fa-solid fa-minus calculatorIcons" id="killMinus-${newGreatOneId}"></i>
+                            </div>
+                        </div>
+                        <div class="divider-white"></div>
+                        <div class="card-body">
+                            <button class="btn-secondary" id="openCalculator-${newGreatOneId}">Open Calculator</button>
+                        </div>
+                    </div>
+                    <h3 class="mt-3">Mark Your Zones</h3>
+                    <div class="card-image" id="mapContainer-${newGreatOneId}">
+                        <img src="${mapUrl}" alt="Map of ${greatOneData.reserve}" class="img-fluid" id="greatOneMap-${newGreatOneId}">
+                    </div>
+                </div>
+            `;
+            
+            sideMenu.insertAdjacentHTML('beforeend', newGreatOneLink);
+            greatOneContainer.insertAdjacentHTML('beforeend', newGreatOneCard);
+            
+            // Initialize functionality for this specific card
+            initializeCardFunctionality(newGreatOneId);
+            
+            // Recreate pins from saved zones data
+            if (greatOneData.zones && greatOneData.zones.length > 0) {
+                const mapContainer = document.getElementById(`mapContainer-${newGreatOneId}`);
+                greatOneData.zones.forEach(zone => {
+                    const pin = document.createElement('div');
+                    pin.classList.add('pin');
+                    pin.style.left = `${zone.x}%`;
+                    pin.style.top = `${zone.y}%`;
+                    pin.innerHTML = `<p class="animal-count">${zone.male + zone.female}</p>`;
+                    pin.dataset.male = zone.male;
+                    pin.dataset.female = zone.female;
+                    
+                    // Add double-click functionality to loaded pins
+                    pin.addEventListener('dblclick', () => {
+                        const countModal = new bootstrap.Modal(document.getElementById('countModal'));
+                        const animalCountInputMale = document.getElementById('animalCountInputMale');
+                        const animalCountInputFemale = document.getElementById('animalCountInputFemale');
+                        const countModalLabel = document.getElementById('countModalLabel');
+                        
+                        // Set up editing
+                        window.editingPin = pin;
+                        animalCountInputMale.value = pin.dataset.male || '';
+                        animalCountInputFemale.value = pin.dataset.female || '';
+                        countModalLabel.textContent = 'Current Animal Count';
+                        countModal.show();
+                    });
+                    
+                    mapContainer.appendChild(pin);
+                });
+            }
+            
+            // Setup auto-save for this card
+            setupAutoSave(`greatOne${newGreatOneId}`);
         })
         .catch(error => {
             console.error('Error loading reserve data:', error);
@@ -263,6 +353,8 @@ function initializePinFunctionality(cardId, greatOneMap, mapContainer) {
             editingPin.remove();
             countModal.hide();
             editingPin = null;
+            // Auto-save after pin deletion
+            saveCurrentGreatOne(`greatOne${cardId}`);
         }
     };
 
@@ -299,8 +391,10 @@ function initializePinFunctionality(cardId, greatOneMap, mapContainer) {
         }
 
         countModal.hide();
+        
+        // Auto-save after pin creation/update
+        saveCurrentGreatOne(`greatOne${cardId}`);
     };
-
 }
 function initializeCardFunctionality(cardId) {
     const killCount = document.getElementById(`kill-count-${cardId}`);
