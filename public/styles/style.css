@@ -1127,27 +1127,249 @@ section {
 }
 
 .side-menu {
-  display: flex;
-  flex-direction: column;
-  padding: 40px !important;
-  background: var(--bg-alternate);
-  box-shadow: var(--shadow-light);
-  height: 100vh;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-heavy);
+    position: sticky;
+    top: 20px;
 }
 
-.side-menu a {
-  color: var(--black) !important;
-  margin-bottom: 1rem;
-  border-radius: 8px;
+.side-header {
+    color: var(--white);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1.2rem;
 }
 
 .divider {
-  width: 100%;
-  height: 1px;
-  background: var(--border-gray);
-  margin: 1rem 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-accent), transparent);
+    margin: 1rem 0 1.5rem 0;
+    border-radius: 1px;
+}
+.addButton {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--gradient-primary) !important;
+    color: var(--white) !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition-fast);
+    margin-bottom: 1.5rem;
+    border: none;
+    box-shadow: var(--shadow-medium);
+    cursor: pointer;
 }
 
+.addButton:hover {
+    background: var(--primary-light) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(44, 85, 48, 0.4);
+    color: var(--white) !important;
+}
+
+.addButton:active {
+    transform: translateY(0);
+}
+
+/* ✅ Navigation Tabs Container */
+#sideMenu {
+    border: none;
+    flex-direction: column !important;
+    gap: 0.5rem;
+}
+
+#sideMenu .nav-item {
+    width: 100%;
+}
+
+/* ✅ Individual Great One Tabs - Updated to match your theme */
+.sidebar-nav-link {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    background: rgba(44, 85, 48, 0.8); /* Using your primary-medium with transparency */
+    color: var(--white) !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition-fast);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+/* ✅ Hover Effect - Updated to match your theme */
+.sidebar-nav-link:hover {
+    background: rgba(74, 124, 89, 0.9); /* Using your primary-light */
+    color: var(--white) !important;
+    border-color: rgba(93, 143, 102, 0.5); /* Using your primary-accent */
+    transform: translateX(4px);
+    box-shadow: var(--shadow-light);
+}
+
+/* ✅ Active State - Updated to match your theme */
+.sidebar-nav-link.active {
+    background: var(--gradient-primary);
+    color: var(--white) !important;
+    border-color: var(--primary-accent);
+    box-shadow: var(--shadow-medium);
+    transform: translateX(4px);
+}
+
+.sidebar-nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: var(--white);
+    border-radius: 0 4px 4px 0;
+}
+
+/* ✅ Focus States for Accessibility - Updated to match your theme */
+.sidebar-nav-link:focus {
+    outline: 2px solid var(--primary-accent);
+    outline-offset: 2px;
+}
+
+/* ✅ Loading Animation - Updated to match your theme */
+.sidebar-nav-link.loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.sidebar-nav-link.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-light);
+    border-top: 2px solid var(--primary-accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ✅ Responsive Design - Updated */
+@media (max-width: 992px) {
+    .side-menu {
+        margin-bottom: 2rem;
+        position: static;
+        min-height: auto;
+        background: var(--bg-alternate-gradient);
+    }
+    
+    #sideMenu {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    #sideMenu .nav-item {
+        width: calc(50% - 0.25rem);
+    }
+}
+
+@media (max-width: 576px) {
+    #sideMenu .nav-item {
+        width: 100%;
+    }
+    
+    .sidebar-nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+
+/* ✅ Scrollbar Styling for Sidebar - Updated to match your theme */
+#sideMenuContainer {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-accent) var(--primary-dark);
+}
+
+#sideMenuContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sideMenuContainer::-webkit-scrollbar-track {
+    background: var(--primary-dark);
+    border-radius: 3px;
+}
+
+#sideMenuContainer::-webkit-scrollbar-thumb {
+    background: var(--primary-accent);
+    border-radius: 3px;
+}
+
+#sideMenuContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-light);
+}
+
+/* ✅ Empty State - Updated to match your theme */
+#sideMenu:empty::after {
+    content: "No Great Ones yet. Click 'New Great One' to get started!";
+    display: block;
+    padding: 2rem 1rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+/* ✅ Badge for Active Great One Count - Updated to match your theme */
+.sidebar-nav-link .badge {
+    float: right;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    margin-left: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-nav-link.active .badge {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ✅ Animation for New Tabs */
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.nav-item {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+.great-one-section {
+  padding-top: 0;
+}
 .great-one-card {
   display: flex;
   flex-direction: column;
@@ -1378,4 +1600,256 @@ section {
     .logoWrapper h2 {
         font-size: 1.5rem;
     }
+}
+/* ✅ Login Icon Styling - Updated to match your theme */
+#prijavaNav {
+      display: flex !important;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+    position: relative;
+}
+
+#prijava {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    color: var(--white) !important;
+    font-size: 1.2rem !important;
+    transition: var(--transition-fast) !important;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ✅ Hover Effect for Login Icon */
+#prijava:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+    color: var(--white) !important;
+}
+
+/* ✅ Active/Focus States */
+#prijava:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 0.3rem rgba(255, 255, 255, 0.25) !important;
+}
+
+#prijava:active {
+    transform: translateY(0) scale(1.02) !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ✅ Icon Animation */
+#prijava i {
+    transition: var(--transition-fast);
+    font-size: 1.1rem;
+}
+
+#prijava:hover i {
+    transform: scale(1.1);
+}
+
+/* ✅ Logged In State Styling */
+#prijava.logged-in {
+    background: var(--gradient-primary) !important;
+    border-color: var(--primary-accent) !important;
+    box-shadow: 0 4px 15px rgba(44, 85, 48, 0.4) !important;
+}
+
+#prijava.logged-in:hover {
+    background: var(--primary-light) !important;
+    border-color: var(--white) !important;
+    box-shadow: 0 6px 20px rgba(44, 85, 48, 0.5) !important;
+}
+
+/* ✅ Login Status Indicator - Position relative to #prijava */
+#prijava::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    background: #dc3545;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    opacity: 0;
+    transition: var(--transition-fast);
+    z-index: 100;
+}
+
+#prijava.logged-in::after {
+    background: #28a745;
+    opacity: 1;
+    animation: loginPulse 2s infinite;
+}
+
+/* ✅ Pulse Animation for Login Status */
+@keyframes loginPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* ✅ Mobile Responsive - Adjust both container and icon */
+@media (max-width: 991.98px) {
+    #prijavaNav {
+        margin: 0.5rem 0;
+        align-self: center;
+        order: 99; /* Put login icon at the end of mobile nav */
+    }
+    
+    #prijava {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.3rem !important;
+    }
+    
+    /* Adjust for mobile navbar collapse */
+    .navbar-collapse #prijavaNav {
+        margin: 1rem 0;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    #prijava {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 1.2rem !important;
+    }
+}
+
+/* ✅ Tooltip - Position relative to #prijava, but use pseudo-elements carefully */
+#prijava[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-dark);
+    color: var(--white);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-fast);
+    z-index: 1000;
+    pointer-events: none;
+    /* Ensure tooltip doesn't interfere with status indicator */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#prijava[data-tooltip]:hover::before {
+    opacity: 1;
+    visibility: visible;
+    bottom: -50px;
+}
+
+/* ✅ Tooltip Arrow - Only show when not logged in to avoid conflict */
+#prijava[data-tooltip]:not(.logged-in):hover::after {
+    content: '';
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid var(--primary-dark);
+    opacity: 1;
+    visibility: visible;
+    transition: var(--transition-fast);
+    z-index: 999;
+}
+
+/* ✅ Loading State for Login Icon */
+#prijava.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+#prijava.loading i {
+    animation: spin 1s linear infinite;
+}
+
+/* ✅ Notification Badge - Position relative to #prijava */
+#prijava .login-notification {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #28a745;
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+    border-radius: 10px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white);
+    opacity: 0;
+    transform: scale(0);
+    transition: var(--transition-fast);
+    z-index: 15; /* Above status indicator */
+}
+
+#prijava.has-notification .login-notification {
+    opacity: 1;
+    transform: scale(1);
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: scale(1);
+    }
+    40%, 43% {
+        transform: scale(1.2);
+    }
+    70% {
+        transform: scale(1.1);
+    }
+    90% {
+        transform: scale(1.05);
+    }
+}
+
+/* ✅ Integration with navbar - Ensure proper spacing */
+.navbar-nav #prijavaNav {
+    margin-left: 1rem;
+}
+
+/* ✅ Override Bootstrap nav-item styles if needed */
+#prijavaNav.nav-item {
+    display: flex !important;
+}
+
+/* ✅ Ensure the login icon doesn't break navbar alignment */
+.navbar-nav {
+    align-items: center;
+}
+
+.navbar-nav .nav-item:last-child {
+    margin-right: 0;
 }

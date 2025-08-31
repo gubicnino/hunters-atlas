@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize UI elements that don't need Supabase
     addGreatOne();
 
+    setupGlobalPinHandler();
+
     // Wait for Supabase to be ready before loading user data
     if (window.supabase) {
         console.log('✅ Supabase already available, loading user Great Ones');
@@ -16,83 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-function createPins() {
-    const greatOneMap = document.getElementById('greatOneMap');
-    const mapContainer = document.getElementById('mapContainer');
-    const countModal = new bootstrap.Modal(document.getElementById('countModal'));
-    const animalCountInputMale = document.getElementById('animalCountInputMale');
-    const animalCountInputFemale = document.getElementById('animalCountInputFemale');
-    const countForm = document.getElementById('countForm');
-    const countModalLabel = document.getElementById('countModalLabel');
-    const deleteZoneButton = document.getElementById('deleteZone');
-
-
-    let clickX = 0, clickY = 0;
-    let editingPin = null;
-
-    if (greatOneMap) {
-        greatOneMap.addEventListener('click', function (e) {
-            const rect = greatOneMap.getBoundingClientRect();
-            const xOffset = e.clientX - rect.left;
-            const yOffset = e.clientY - rect.top;
-
-            clickX = (xOffset / rect.width) * 100;
-            clickY = (yOffset / rect.height) * 100;
-
-            editingPin = null; // this is a new pin
-            animalCountInputMale.value = ''; // clear previous value
-            animalCountInputFemale.value = ''; // clear previous value
-            countModal.show();
-        });
-    }
-
-    deleteZoneButton.addEventListener('click', function () {
-        if (editingPin) {
-            editingPin.remove();
-            countModal.hide();
-            editingPin = null;
-        }
-    });
-
-    countForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const maleCount = animalCountInputMale.value;
-        const femaleCount = animalCountInputFemale.value
-        const count = parseInt(maleCount) + parseInt(femaleCount);
-
-        if (!count) return;
-
-        if (editingPin) {
-            // update existing pin
-            editingPin.querySelector('.animal-count').textContent = parseInt(maleCount) + parseInt(femaleCount);
-            editingPin.dataset.male = maleCount;
-            editingPin.dataset.female = femaleCount;
-        } else {
-            // create new pin
-            const pin = document.createElement('div');
-            pin.classList.add('pin');
-            pin.style.left = `${clickX}%`;
-            pin.style.top = `${clickY}%`;
-            pin.innerHTML = `<p class="animal-count">${count}</p>`;
-            pin.dataset.male = maleCount;
-            pin.dataset.female = femaleCount;
-
-            // Enable double-click editing
-            pin.addEventListener('dblclick', () => {
-                editingPin = pin;
-                animalCountInputMale.value = pin.dataset.male || '';
-                animalCountInputFemale.value = pin.dataset.female || '';
-                countModalLabel.textContent = 'Current Animal Count';
-                countModal.show();
-            });
-
-            mapContainer.appendChild(pin);
-        }
-
-        countModal.hide();
-    });
-}
 
 function killCounter() {
     const killCountInput = document.getElementById('killCountModal');
@@ -378,16 +303,11 @@ function createGreatOneTabFromData(greatOneData) {
 }
 
 function initializePinFunctionality(cardId, greatOneMap, mapContainer) {
-    const countModal = new bootstrap.Modal(document.getElementById('countModal'));
     const animalCountInputMale = document.getElementById('animalCountInputMale');
     const animalCountInputFemale = document.getElementById('animalCountInputFemale');
-    const countForm = document.getElementById('countForm');
     const countModalLabel = document.getElementById('countModalLabel');
-    const deleteZoneButton = document.getElementById('deleteZone');
 
     let clickX = 0, clickY = 0;
-    let editingPin = null;
-
     if (greatOneMap) {
         greatOneMap.addEventListener('click', function (e) {
             const rect = greatOneMap.getBoundingClientRect();
@@ -397,60 +317,21 @@ function initializePinFunctionality(cardId, greatOneMap, mapContainer) {
             clickX = (xOffset / rect.width) * 100;
             clickY = (yOffset / rect.height) * 100;
 
-            editingPin = null;
+            // ✅ Set global context for new pin creation
+            window.currentCardId = cardId;
+            window.editingPin = null;
+            window.clickX = clickX;
+            window.clickY = clickY;
+
             animalCountInputMale.value = '';
             animalCountInputFemale.value = '';
+            countModalLabel.textContent = 'Add Animal Count';
+
+            const countModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('countModal'));
             countModal.show();
         });
     }
 
-    deleteZoneButton.onclick = function () {
-        if (editingPin) {
-            editingPin.remove();
-            countModal.hide();
-            editingPin = null;
-            // Auto-save after pin deletion
-            saveCurrentGreatOne(`greatOne${cardId}`);
-        }
-    };
-
-    countForm.onsubmit = function (e) {
-        e.preventDefault();
-        const maleCount = animalCountInputMale.value;
-        const femaleCount = animalCountInputFemale.value;
-        const count = parseInt(maleCount) + parseInt(femaleCount);
-
-        if (!count) return;
-
-        if (editingPin) {
-            editingPin.querySelector('.animal-count').textContent = parseInt(maleCount) + parseInt(femaleCount);
-            editingPin.dataset.male = maleCount;
-            editingPin.dataset.female = femaleCount;
-        } else {
-            const pin = document.createElement('div');
-            pin.classList.add('pin');
-            pin.style.left = `${clickX}%`;
-            pin.style.top = `${clickY}%`;
-            pin.innerHTML = `<p class="animal-count">${count}</p>`;
-            pin.dataset.male = maleCount;
-            pin.dataset.female = femaleCount;
-
-            pin.addEventListener('dblclick', () => {
-                editingPin = pin;
-                animalCountInputMale.value = pin.dataset.male || '';
-                animalCountInputFemale.value = pin.dataset.female || '';
-                countModalLabel.textContent = 'Current Animal Count';
-                countModal.show();
-            });
-
-            mapContainer.appendChild(pin);
-        }
-
-        countModal.hide();
-
-        // Auto-save after pin creation/update
-        saveCurrentGreatOne(`greatOne${cardId}`);
-    };
 }
 function initializeCardFunctionality(cardId) {
     const killCount = document.getElementById(`kill-count-${cardId}`);
@@ -632,4 +513,112 @@ function saveCurrentGreatOne(cardId) {
     });
 
     saveGreatOneProgress(cardId, species, reserve, killCount, zones);
+}
+
+function setupGlobalPinHandler() {
+    const countForm = document.getElementById('countForm');
+    const deleteZoneButton = document.getElementById('deleteZone');
+    if (!countForm) return;
+
+    if (deleteZoneButton) {
+        deleteZoneButton.addEventListener('click', function () {
+            console.log('🗑️ Delete zone button clicked');
+            console.log('🎯 Current editing pin:', window.editingPin);
+
+            if (window.editingPin) {
+                // Remove the pin from the DOM
+                window.editingPin.remove();
+
+                // Hide the modal
+                const countModal = bootstrap.Modal.getInstance(document.getElementById('countModal'));
+                countModal.hide();
+
+                // Clear the editing state
+                window.editingPin = null;
+
+                // Auto-save after pin deletion
+                if (window.currentCardId) {
+                    console.log('💾 Auto-saving after pin deletion');
+                    saveCurrentGreatOne(`greatOne${window.currentCardId}`);
+                }
+
+                console.log('✅ Pin deleted successfully');
+            } else {
+                console.warn('⚠️ No pin selected for deletion');
+            }
+        });
+    }
+
+    // Remove any existing handlers
+    countForm.onsubmit = null;
+
+    countForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log('📌 Pin form submitted');
+        console.log('🎯 Current card:', window.currentCardId);
+        console.log('✏️ Editing pin:', window.editingPin);
+
+        if (!window.currentCardId) {
+            console.error('❌ No current card ID');
+            return;
+        }
+
+        const animalCountInputMale = document.getElementById('animalCountInputMale');
+        const animalCountInputFemale = document.getElementById('animalCountInputFemale');
+        const countModal = bootstrap.Modal.getInstance(document.getElementById('countModal'));
+
+        const maleCount = parseInt(animalCountInputMale.value) || 0;
+        const femaleCount = parseInt(animalCountInputFemale.value) || 0;
+        const count = maleCount + femaleCount;
+
+        if (!count) return;
+
+        if (window.editingPin) {
+            // ✅ Update existing pin
+            console.log('✏️ Updating existing pin');
+            window.editingPin.querySelector('.animal-count').textContent = count;
+            window.editingPin.dataset.male = maleCount;
+            window.editingPin.dataset.female = femaleCount;
+        } else {
+            // ✅ Create new pin
+            console.log('➕ Creating new pin');
+            const mapContainer = document.getElementById(`mapContainer-${window.currentCardId}`);
+
+            const pin = document.createElement('div');
+            pin.classList.add('pin');
+            pin.style.left = `${window.clickX}%`;
+            pin.style.top = `${window.clickY}%`;
+            pin.innerHTML = `<p class="animal-count">${count}</p>`;
+            pin.dataset.male = maleCount;
+            pin.dataset.female = femaleCount;
+
+            // ✅ Add double-click handler with global context
+            pin.addEventListener('dblclick', () => {
+                console.log('🖱️ Pin double-clicked');
+                window.editingPin = pin;
+                window.currentCardId = window.currentCardId; // Keep current context
+
+                const animalCountInputMale = document.getElementById('animalCountInputMale');
+                const animalCountInputFemale = document.getElementById('animalCountInputFemale');
+                const countModalLabel = document.getElementById('countModalLabel');
+
+                animalCountInputMale.value = pin.dataset.male || '';
+                animalCountInputFemale.value = pin.dataset.female || '';
+                countModalLabel.textContent = 'Edit Animal Count';
+
+                const modal = new bootstrap.Modal(document.getElementById('countModal'));
+                modal.show();
+            });
+
+            mapContainer.appendChild(pin);
+        }
+
+        countModal.hide();
+
+        // Clear editing state
+        window.editingPin = null;
+
+        // Auto-save after pin change
+        saveCurrentGreatOne(`greatOne${window.currentCardId}`);
+    });
 }
