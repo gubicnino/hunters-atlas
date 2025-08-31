@@ -46,8 +46,14 @@ function loadSupabase() {
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpaWdmdGt1dWh0a2Rwc2pzcGtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEwMjE5NjgsImV4cCI6MjA2NjU5Nzk2OH0.SEDHd8u7jzzEQj3ytsPB-HwwKEHDHRVEB65XUm7h-pU'
             );
             console.log('Supabase client loaded globally');
+            
+            // ✅ Dispatch event to notify other scripts that Supabase is ready
+            window.dispatchEvent(new CustomEvent('supabaseReady'));
         };
         document.head.appendChild(script);
+    } else {
+        // If Supabase is already loaded, dispatch the event immediately
+        window.dispatchEvent(new CustomEvent('supabaseReady'));
     }
 }
 function setCurrentYear() {

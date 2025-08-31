@@ -1,8 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('🚀 Great One Assistant DOM loaded');
+
+    // Initialize UI elements that don't need Supabase
     addGreatOne();
-    
-    // Load user's saved Great Ones when page loads
-    loadUserGreatOnes();
+
+    // Wait for Supabase to be ready before loading user data
+    if (window.supabase) {
+        console.log('✅ Supabase already available, loading user Great Ones');
+        loadUserGreatOnes();
+    } else {
+        console.log('⏳ Waiting for Supabase to load...');
+        window.addEventListener('supabaseReady', function () {
+            console.log('🎉 Supabase ready event received, loading user Great Ones');
+            loadUserGreatOnes();
+        });
+    }
 });
 
 function createPins() {
@@ -187,13 +199,57 @@ function addGreatOne() {
     });
 }
 // Update the createGreatOneTab function to include auto-save setup
-function createGreatOneTab(species, map, label) {
+async function createGreatOneTab(species, map, label) {
     const sideMenu = document.getElementById('sideMenu');
     const greatOneContainer = document.getElementById('greatOneContainer');
-    const currentGreatOneCount = sideMenu.children.length;
     const cleanSpecies = species.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const cleanMap = map.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    const newGreatOneId = currentGreatOneCount + 1;
+
+    let newGreatOneId;
+    try {
+        if (!window.supabase) {
+            console.error('❌ Supabase not available');
+            return;
+        }
+
+        const { data: { user } } = await window.supabase.auth.getUser();
+        if (!user) {
+            console.error('❌ No user logged in');
+            return;
+        }
+
+        const greatOneData = {
+            user_id: user.id,
+            species: species,
+            reserve: map,
+            kill_count: 0,
+            zones: [],
+            label: label
+        };
+
+        console.log('💾 Creating database record with data:', greatOneData);
+
+        const { data, error } = await window.supabase
+            .from('user_great_ones')
+            .insert(greatOneData)
+            .select();
+
+        if (error) {
+            console.error('❌ Database error:', error);
+            throw error;
+        }
+
+        if (!data || !data[0]) {
+            console.error('❌ No data returned from database');
+            throw new Error('No data returned from database');
+        }
+
+        newGreatOneId = data[0].id;
+        console.log('✅ Database record created with ID:', newGreatOneId);
+
+    } catch (error) {
+        console.error('❌ Error creating Great One in database:', error);
+    }
     const newGreatOneLink = ' <li class="nav-item" role="presentation"><button class="nav-link sidebar-nav-link active" data-bs-toggle="tab" data-bs-target="#greatOne' + newGreatOneId + '" type="button" role="tab" aria-controls="greatOne' + newGreatOneId + '" aria-selected="true">' + label + '</button></li>';
     fetch(`/reserves/map/${map}`)
         .then(response => response.json())
@@ -201,10 +257,10 @@ function createGreatOneTab(species, map, label) {
             const newData = data[0];
             const mapUrl = newData.map_url;
             const newGreatOneCard = `
-                <div class="great-one-card tab-pane active show" id="greatOne${newGreatOneId}" role="tabpanel" aria-labelledby="greatOne${newGreatOneId}-tab">
+                <div class="great-one-card tab-pane active show" id="greatOne${newGreatOneId}" role="tabpanel" aria-labelledby="greatOne${newGreatOneId}-tab" data-great-one-id="${newGreatOneId}">
                     <div class="content-card">
                         <div class="card-header">
-                            <h5 class="card-subheader">Great One Number: ${newGreatOneId}</h5>
+                            <h5 class="card-subheader">${label}</h5>
                             <h3>${cleanSpecies}</h3>
                             <div class="card-kills">
                                 <p class="kill-counter">Current Kills: <span id="kill-count-${newGreatOneId}">0</span></p>
@@ -226,10 +282,10 @@ function createGreatOneTab(species, map, label) {
             removeShowActiveTab();
             sideMenu.insertAdjacentHTML('beforeend', newGreatOneLink);
             greatOneContainer.insertAdjacentHTML('beforeend', newGreatOneCard);
-            
+
             // Initialize functionality for this specific card
             initializeCardFunctionality(newGreatOneId);
-            
+
             // Setup auto-save for this new card
             setupAutoSave(`greatOne${newGreatOneId}`);
         })
@@ -241,12 +297,12 @@ function createGreatOneTab(species, map, label) {
 function createGreatOneTabFromData(greatOneData) {
     const sideMenu = document.getElementById('sideMenu');
     const greatOneContainer = document.getElementById('greatOneContainer');
-    const currentGreatOneCount = sideMenu.children.length;
     const cleanSpecies = greatOneData.species.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const cleanMap = greatOneData.reserve.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    const newGreatOneId = currentGreatOneCount + 1;
-    const newGreatOneLink = `<li class="nav-item" role="presentation"><button class="nav-link sidebar-nav-link" data-bs-toggle="tab" data-bs-target="#greatOne${newGreatOneId}" type="button" role="tab" aria-controls="greatOne${newGreatOneId}" aria-selected="false">${cleanSpecies} - ${cleanMap}</button></li>`;
-    
+    const newGreatOneId = greatOneData.id;
+    const label = greatOneData.label;
+    const newGreatOneLink = `<li class="nav-item" role="presentation"><button class="nav-link sidebar-nav-link" data-bs-toggle="tab" data-bs-target="#greatOne${newGreatOneId}" type="button" role="tab" aria-controls="greatOne${newGreatOneId}" aria-selected="false">${label}</button></li>`;
+
     fetch(`/reserves/map/${greatOneData.reserve}`)
         .then(response => response.json())
         .then(data => {
@@ -256,7 +312,7 @@ function createGreatOneTabFromData(greatOneData) {
                 <div class="great-one-card tab-pane" id="greatOne${newGreatOneId}" role="tabpanel" aria-labelledby="greatOne${newGreatOneId}-tab" data-great-one-id="${greatOneData.id}">
                     <div class="content-card">
                         <div class="card-header">
-                            <h5 class="card-subheader">Great One Number: ${newGreatOneId}</h5>
+                            <h5 class="card-subheader">${label}</h5>
                             <h3>${cleanSpecies}</h3>
                             <div class="card-kills">
                                 <p class="kill-counter">Current Kills: <span id="kill-count-${newGreatOneId}">${greatOneData.kill_count}</span></p>
@@ -275,13 +331,13 @@ function createGreatOneTabFromData(greatOneData) {
                     </div>
                 </div>
             `;
-            
+
             sideMenu.insertAdjacentHTML('beforeend', newGreatOneLink);
             greatOneContainer.insertAdjacentHTML('beforeend', newGreatOneCard);
-            
+
             // Initialize functionality for this specific card
             initializeCardFunctionality(newGreatOneId);
-            
+
             // Recreate pins from saved zones data
             if (greatOneData.zones && greatOneData.zones.length > 0) {
                 const mapContainer = document.getElementById(`mapContainer-${newGreatOneId}`);
@@ -293,14 +349,14 @@ function createGreatOneTabFromData(greatOneData) {
                     pin.innerHTML = `<p class="animal-count">${zone.male + zone.female}</p>`;
                     pin.dataset.male = zone.male;
                     pin.dataset.female = zone.female;
-                    
+
                     // Add double-click functionality to loaded pins
                     pin.addEventListener('dblclick', () => {
                         const countModal = new bootstrap.Modal(document.getElementById('countModal'));
                         const animalCountInputMale = document.getElementById('animalCountInputMale');
                         const animalCountInputFemale = document.getElementById('animalCountInputFemale');
                         const countModalLabel = document.getElementById('countModalLabel');
-                        
+
                         // Set up editing
                         window.editingPin = pin;
                         animalCountInputMale.value = pin.dataset.male || '';
@@ -308,11 +364,11 @@ function createGreatOneTabFromData(greatOneData) {
                         countModalLabel.textContent = 'Current Animal Count';
                         countModal.show();
                     });
-                    
+
                     mapContainer.appendChild(pin);
                 });
             }
-            
+
             // Setup auto-save for this card
             setupAutoSave(`greatOne${newGreatOneId}`);
         })
@@ -391,7 +447,7 @@ function initializePinFunctionality(cardId, greatOneMap, mapContainer) {
         }
 
         countModal.hide();
-        
+
         // Auto-save after pin creation/update
         saveCurrentGreatOne(`greatOne${cardId}`);
     };
@@ -403,27 +459,27 @@ function initializeCardFunctionality(cardId) {
     const openCalculator = document.getElementById(`openCalculator-${cardId}`);
     const greatOneMap = document.getElementById(`greatOneMap-${cardId}`);
     const mapContainer = document.getElementById(`mapContainer-${cardId}`);
-    
+
     // Kill counter functionality
     killPlus.addEventListener('click', function () {
         let currentCount = parseInt(killCount.textContent);
         killCount.textContent = currentCount + 1;
     });
-    
+
     killMinus.addEventListener('click', function () {
         let currentCount = parseInt(killCount.textContent);
         if (currentCount > 0) {
             killCount.textContent = currentCount - 1;
         }
     });
-    
+
     // Double-click to edit kill count
     killCount.addEventListener('dblclick', function () {
         const killCountInput = document.getElementById('killCountModal');
         const countModalKill = new bootstrap.Modal(document.getElementById('countModalKill'));
         killCountInput.value = killCount.textContent;
         countModalKill.show();
-        
+
         // Update the form submission to target this specific kill count
         const killCountForm = document.getElementById('killCountForm');
         killCountForm.onsubmit = function (e) {
@@ -436,12 +492,12 @@ function initializeCardFunctionality(cardId) {
             killCountInput.value = '';
         };
     });
-    
+
     // Calculator functionality
     openCalculator.addEventListener('click', function () {
         const modalCalculator = new bootstrap.Modal(document.getElementById('modalCalculator'));
         modalCalculator.show();
-        
+
         // Update calculator form to target this specific card
         const calculatorForm = document.getElementById('modalCalculatorForm');
         calculatorForm.onsubmit = function (e) {
@@ -458,7 +514,7 @@ function initializeCardFunctionality(cardId) {
             document.getElementById('afterCount').value = '';
         };
     });
-    
+
     // Pin creation functionality
     initializePinFunctionality(cardId, greatOneMap, mapContainer);
 }
@@ -477,7 +533,7 @@ function removeShowActiveTab() {
 
 async function saveGreatOneProgress(cardId, species, reserve, killCount, zones) {
     if (!window.supabase) return;
-    
+
     try {
         const { data: { user } } = await window.supabase.auth.getUser();
         if (!user) return;
@@ -492,28 +548,21 @@ async function saveGreatOneProgress(cardId, species, reserve, killCount, zones) 
 
         // Check if this Great One already exists
         const existingId = document.getElementById(cardId).dataset.greatOneId;
-        
+        console.log('Saving Great One data:', greatOneData, 'Existing ID:', existingId);
+
         if (existingId) {
             // Update existing
+            console.log('Updating existing Great One with ID:', existingId);
             const { error } = await window.supabase
                 .from('user_great_ones')
                 .update(greatOneData)
                 .eq('id', existingId);
-                
+
             if (error) throw error;
         } else {
-            // Create new
-            const { data, error } = await window.supabase
-                .from('user_great_ones')
-                .insert(greatOneData)
-                .select();
-                
-            if (error) throw error;
-            
-            // Store the ID for future updates
-            document.getElementById(cardId).dataset.greatOneId = data[0].id;
+            console.log('No existing ID');
         }
-        
+
         console.log('Great One progress saved');
     } catch (error) {
         console.error('Error saving Great One progress:', error);
@@ -521,8 +570,9 @@ async function saveGreatOneProgress(cardId, species, reserve, killCount, zones) 
 }
 
 async function loadUserGreatOnes() {
+    console.log('Loading user Great Ones...');
     if (!window.supabase) return;
-    
+
     try {
         const { data: { user } } = await window.supabase.auth.getUser();
         if (!user) return;
@@ -531,14 +581,15 @@ async function loadUserGreatOnes() {
             .from('user_great_ones')
             .select('*')
             .eq('user_id', user.id);
-            
+
         if (error) throw error;
-        
+
         // Recreate Great One tabs from saved data
         data.forEach(greatOne => {
+            console.log('Loading Great One:', greatOne);
             createGreatOneTabFromData(greatOne);
         });
-        
+
     } catch (error) {
         console.error('Error loading Great Ones:', error);
     }
@@ -548,7 +599,7 @@ async function loadUserGreatOnes() {
 function setupAutoSave(cardId) {
     const card = document.getElementById(cardId);
     let saveTimeout;
-    
+
     // Auto-save when kill count changes
     const killCountElement = card.querySelector(`#kill-count-${cardId.replace('greatOne', '')}`);
     const observer = new MutationObserver(() => {
@@ -557,7 +608,7 @@ function setupAutoSave(cardId) {
             saveCurrentGreatOne(cardId);
         }, 1000); // Save 1 second after last change
     });
-    
+
     if (killCountElement) {
         observer.observe(killCountElement, { childList: true, subtree: true });
     }
@@ -568,7 +619,7 @@ function saveCurrentGreatOne(cardId) {
     const species = card.querySelector('h3').textContent;
     const reserve = card.querySelector('.card-image img').alt.replace('Map of ', '');
     const killCount = parseInt(card.querySelector(`#kill-count-${cardId.replace('greatOne', '')}`).textContent);
-    
+
     // Collect zones data
     const zones = [];
     card.querySelectorAll('.pin').forEach(pin => {
@@ -579,6 +630,6 @@ function saveCurrentGreatOne(cardId) {
             female: parseInt(pin.dataset.female || 0)
         });
     });
-    
+
     saveGreatOneProgress(cardId, species, reserve, killCount, zones);
 }
