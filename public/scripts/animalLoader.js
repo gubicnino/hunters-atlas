@@ -186,7 +186,7 @@ function createTabMenu(reserves, animalName) {
         const safeReserveName = reserve.reserve_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
 
         return `
-        <li class="nav-item">
+        <li class="nav-item animal-tab ">
             <a class="nav-link ${index === 0 ? 'active' : ''}" 
                id="${safeAnimalName}-${safeReserveName}-tab" 
                data-bs-toggle="tab" 

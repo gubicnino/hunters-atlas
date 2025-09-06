@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setupGlobalPinHandler();
 
+
     // Wait for Supabase to be ready before loading user data
     if (window.supabase) {
         console.log('✅ Supabase already available, loading user Great Ones');
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
             loadUserGreatOnes();
         });
     }
+    
 });
 
 function killCounter() {
@@ -202,17 +204,22 @@ async function createGreatOneTab(species, map, label) {
                     <div class="card-image" id="mapContainer-${newGreatOneId}">
                         <img src="${mapUrl}" alt="Map of ${map}" class="img-fluid" id="greatOneMap-${newGreatOneId}">
                     </div>
+                    <button class="deleteGreatOneBtn mt-3 mb-5" id="deleteGreatOne-${newGreatOneId}">Delete This Great One</button>
                 </div>
             `;
             removeShowActiveTab();
             sideMenu.insertAdjacentHTML('beforeend', newGreatOneLink);
             greatOneContainer.insertAdjacentHTML('beforeend', newGreatOneCard);
 
+             setTimeout(() => {
+                activateTab(`greatOne${newGreatOneId}`);
+            }, 100);
             // Initialize functionality for this specific card
             initializeCardFunctionality(newGreatOneId);
 
             // Setup auto-save for this new card
             setupAutoSave(`greatOne${newGreatOneId}`);
+            setupDeleteFunctionality(newGreatOneId);
         })
         .catch(error => {
             console.error('Error loading reserve data:', error);
@@ -254,11 +261,19 @@ function createGreatOneTabFromData(greatOneData) {
                     <div class="card-image" id="mapContainer-${newGreatOneId}">
                         <img src="${mapUrl}" alt="Map of ${greatOneData.reserve}" class="img-fluid" id="greatOneMap-${newGreatOneId}">
                     </div>
+                    <button class="deleteGreatOneBtn mt-3 mb-5" id="deleteGreatOne-${newGreatOneId}">Delete This Great One</button>
                 </div>
             `;
 
+            removeShowActiveTab();
+
             sideMenu.insertAdjacentHTML('beforeend', newGreatOneLink);
             greatOneContainer.insertAdjacentHTML('beforeend', newGreatOneCard);
+
+             setTimeout(() => {
+                activateTab(`greatOne${newGreatOneId}`);
+            }, 100);
+
 
             // Initialize functionality for this specific card
             initializeCardFunctionality(newGreatOneId);
@@ -296,6 +311,7 @@ function createGreatOneTabFromData(greatOneData) {
 
             // Setup auto-save for this card
             setupAutoSave(`greatOne${newGreatOneId}`);
+            setupDeleteFunctionality(newGreatOneId);
         })
         .catch(error => {
             console.error('Error loading reserve data:', error);
@@ -621,4 +637,126 @@ function setupGlobalPinHandler() {
         // Auto-save after pin change
         saveCurrentGreatOne(`greatOne${window.currentCardId}`);
     });
+}
+
+function setupDeleteFunctionality(greatOneId) {
+    const deleteBtn = document.getElementById(`deleteGreatOne-${greatOneId}`);
+    
+    if (!deleteBtn) {
+        console.error('❌ Delete button not found for Great One:', greatOneId);
+        return;
+    }
+    
+    console.log('✅ Setting up delete functionality for Great One:', greatOneId);
+    
+    deleteBtn.addEventListener('click', async function (e) {
+        e.preventDefault();
+        
+        const cardId = `greatOne${greatOneId}`;
+        const card = document.getElementById(cardId);
+        
+        if (!card) {
+            console.error('❌ Card not found:', cardId);
+            return;
+        }
+        
+        if (!window.supabase) {
+            console.error('❌ Supabase not available');
+            return;
+        }
+
+        // Get the label for confirmation
+        const label = card.querySelector('.card-subheader')?.textContent || 'this Great One';
+        
+        if (!confirm(`Are you sure you want to delete "${label}"? This action cannot be undone.`)) {
+            return;
+        }
+        
+        try {
+            const { data: { user } } = await window.supabase.auth.getUser();
+            if (!user) {
+                console.error('❌ No user logged in');
+                return;
+            }
+            
+            console.log('🗑️ Deleting Great One from database:', greatOneId);
+            
+            const { error } = await window.supabase
+                .from('user_great_ones')
+                .delete()
+                .eq('id', greatOneId)
+                .eq('user_id', user.id);
+                
+            if (error) throw error;
+            
+            console.log('✅ Great One deleted from database');
+            
+            // ✅ Remove the card and tab from UI
+            const tabButton = document.querySelector(`button[data-bs-target="#greatOne${greatOneId}"]`);
+            if (tabButton) {
+                tabButton.parentElement.remove(); // Remove the <li> wrapper
+            }
+            
+            card.remove();
+            
+            console.log('✅ Great One removed from UI');
+            
+        } catch (error) {
+            console.error('❌ Error deleting Great One:', error);
+            alert('Error deleting Great One. Please try again.');
+        }
+    });
+}
+
+function removeShowActiveTab() {
+    // Remove active classes from all tabs
+    document.querySelectorAll('.tab-pane.active.show').forEach(tab => {
+        tab.classList.remove('active', 'show');
+    });
+    
+    // ✅ Properly remove active and any stuck hover states
+    document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+        link.classList.remove('active');
+        link.classList.remove('hover-stuck'); // Remove any stuck states
+        
+        // Force browser to recalculate styles
+        link.offsetHeight; // Trigger reflow
+    });
+}
+
+function activateTab(tabId) {
+    console.log('🎯 Activating tab:', tabId);
+    
+    // Clean all existing active states
+    document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+        link.classList.remove('active');
+        link.setAttribute('aria-selected', 'false');
+    });
+    
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active', 'show');
+    });
+    
+    // Find and activate the new tab
+    const newTabButton = document.querySelector(`button[data-bs-target="#${tabId}"]`);
+    const newTabPane = document.getElementById(tabId);
+    
+    if (newTabButton && newTabPane) {
+        // Set button state
+        newTabButton.classList.add('active');
+        newTabButton.setAttribute('aria-selected', 'true');
+        
+        // Set pane state
+        newTabPane.classList.add('active', 'show');
+        
+        // ✅ Use Bootstrap Tab API for proper initialization
+        const tab = new bootstrap.Tab(newTabButton);
+        tab.show();
+        
+        console.log('✅ Tab activated successfully');
+        return true;
+    } else {
+        console.error('❌ Tab elements not found for:', tabId);
+        return false;
+    }
 }

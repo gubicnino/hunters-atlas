@@ -338,6 +338,9 @@ section {
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   gap: 1.5rem;
 }
+.animal-tab .nav-link {
+  color: var(--white) !important;
+}
 
 .animal-card {
   background: var(--white);
@@ -489,7 +492,7 @@ section {
   background: var(--light-gray);
   border: 1px solid var(--border-gray);
   border-radius: 8px 8px 0 0;
-  color: var(--text-gray);
+  color: var(--text-gray) !important;
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.5rem 0.8rem;
@@ -508,7 +511,7 @@ section {
 .need-zones-table .nav-tabs .nav-link.active {
   background: var(--primary-medium);
   border-color: var(--primary-medium);
-  color: var(--white);
+  color: var(--white) !important;
   box-shadow: 0 2px 8px rgba(44, 85, 48, 0.3);
 }
 
@@ -1672,27 +1675,6 @@ section {
     box-shadow: 0 6px 20px rgba(44, 85, 48, 0.5) !important;
 }
 
-/* ✅ Login Status Indicator - Position relative to #prijava */
-#prijava::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    width: 12px;
-    height: 12px;
-    background: #dc3545;
-    border: 2px solid var(--white);
-    border-radius: 50%;
-    opacity: 0;
-    transition: var(--transition-fast);
-    z-index: 100;
-}
-
-#prijava.logged-in::after {
-    background: #28a745;
-    opacity: 1;
-    animation: loginPulse 2s infinite;
-}
 
 /* ✅ Pulse Animation for Login Status */
 @keyframes loginPulse {
@@ -1733,62 +1715,6 @@ section {
         height: 45px !important;
         font-size: 1.2rem !important;
     }
-}
-
-/* ✅ Tooltip - Position relative to #prijava, but use pseudo-elements carefully */
-#prijava[data-tooltip]::before {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: -45px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--primary-dark);
-    color: var(--white);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: var(--transition-fast);
-    z-index: 1000;
-    pointer-events: none;
-    /* Ensure tooltip doesn't interfere with status indicator */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-#prijava[data-tooltip]:hover::before {
-    opacity: 1;
-    visibility: visible;
-    bottom: -50px;
-}
-
-/* ✅ Tooltip Arrow - Only show when not logged in to avoid conflict */
-#prijava[data-tooltip]:not(.logged-in):hover::after {
-    content: '';
-    position: absolute;
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid var(--primary-dark);
-    opacity: 1;
-    visibility: visible;
-    transition: var(--transition-fast);
-    z-index: 999;
-}
-
-/* ✅ Loading State for Login Icon */
-#prijava.loading {
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-#prijava.loading i {
-    animation: spin 1s linear infinite;
 }
 
 /* ✅ Notification Badge - Position relative to #prijava */
